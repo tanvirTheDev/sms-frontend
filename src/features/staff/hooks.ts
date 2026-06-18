@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { toast } from 'sonner'
-import { staffApi, type ListStaffQuery } from '@/api/staff'
+import { staffApi, serviceBookApi, type ListStaffQuery, type CreateServiceBookEntryPayload } from '@/api/staff'
 import type { CreateStaffPayload, UpdateStaffPayload } from '@/types/staff'
 
 const QUERY_KEY = 'staff'
@@ -87,6 +87,50 @@ export function useDeactivateStaff(schoolId: string) {
     onError: (err: { response?: { data?: { message?: string } } }) => {
       const msg = err.response?.data?.message ?? 'Failed to deactivate'
       toast.error(ERROR_MESSAGES[msg] ?? msg)
+    },
+  })
+}
+
+const SB_KEY = 'service-book'
+
+export function useServiceBook(schoolId: string | null, staffId: string | null) {
+  return useQuery({
+    queryKey: [SB_KEY, schoolId, staffId],
+    queryFn: async () => {
+      const res = await serviceBookApi.list(schoolId!, staffId!, { limit: 50 })
+      return res.data.data ?? []
+    },
+    enabled: !!schoolId && !!staffId,
+    staleTime: 60 * 1000,
+  })
+}
+
+export function useCreateServiceBookEntry(schoolId: string, staffId: string) {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (payload: CreateServiceBookEntryPayload) =>
+      serviceBookApi.create(schoolId, staffId, payload),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [SB_KEY, schoolId, staffId] })
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY, schoolId, staffId] })
+      toast.success('Service book entry added')
+    },
+    onError: (err: { response?: { data?: { message?: string } } }) => {
+      toast.error(err.response?.data?.message ?? 'Failed to add entry')
+    },
+  })
+}
+
+export function useDeleteServiceBookEntry(schoolId: string, staffId: string) {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: (id: string) => serviceBookApi.delete(schoolId, staffId, id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [SB_KEY, schoolId, staffId] })
+      toast.success('Entry deleted')
+    },
+    onError: (err: { response?: { data?: { message?: string } } }) => {
+      toast.error(err.response?.data?.message ?? 'Failed to delete entry')
     },
   })
 }

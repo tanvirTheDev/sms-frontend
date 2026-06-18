@@ -3,7 +3,7 @@ import { useNavigate } from '@tanstack/react-router'
 import { toast } from 'sonner'
 import { authApi } from '@/api/auth'
 import { useAuthStore } from '@/store/authStore'
-import type { RegisterPayload, LoginPayload, ForgotPasswordPayload, ResetPasswordPayload, VerifyPhonePayload } from '@/api/auth'
+import type { RegisterPayload, LoginPayload, ForgotPasswordPayload, ResetPasswordPayload, VerifyPhonePayload, StudentLoginPayload } from '@/api/auth'
 
 export function useLogin() {
   const { setAuth } = useAuthStore()
@@ -21,7 +21,6 @@ export function useLogin() {
       const msg = error.response?.data?.message ?? 'Login failed'
       const friendly: Record<string, string> = {
         INVALID_CREDENTIALS: 'Invalid phone number or password',
-        PHONE_NOT_VERIFIED: 'Please verify your phone number first',
         ACCOUNT_INACTIVE: 'Your account is inactive. Contact support.',
       }
       toast.error(friendly[msg] ?? msg)
@@ -112,6 +111,30 @@ export function useResetPassword() {
       const friendly: Record<string, string> = {
         INVALID_OTP: 'Invalid or expired OTP',
         OTP_EXPIRED: 'OTP has expired. Request a new one.',
+      }
+      toast.error(friendly[msg] ?? msg)
+    },
+  })
+}
+
+export function useStudentLogin() {
+  const { setAuth } = useAuthStore()
+  const navigate = useNavigate()
+
+  return useMutation({
+    mutationFn: (payload: StudentLoginPayload) => authApi.studentLogin(payload),
+    onSuccess: ({ data }) => {
+      const { accessToken, refreshToken, user } = data.data!
+      setAuth(user, accessToken, refreshToken)
+      toast.success('Login successful')
+      navigate({ to: '/dashboard' })
+    },
+    onError: (error: { response?: { data?: { message?: string } } }) => {
+      const msg = error.response?.data?.message ?? 'Login failed'
+      const friendly: Record<string, string> = {
+        INVALID_CREDENTIALS: 'Invalid student ID or password',
+        ACCOUNT_INACTIVE: 'Account is inactive. Contact your school.',
+        NO_ACTIVE_ENROLLMENT: 'No active enrollment found. Contact your school.',
       }
       toast.error(friendly[msg] ?? msg)
     },

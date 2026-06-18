@@ -4,7 +4,8 @@ import { useAuthStore } from '@/store/authStore'
 import type { UserRole } from '@/types'
 import {
   LayoutDashboard, Users, GraduationCap, BookOpen, DollarSign, Bell,
-  Settings, School, ClipboardList, TrendingUp, UserCheck, Library, X,
+  Settings, School, ClipboardList, TrendingUp, UserCheck, Library, X, Cog, Shield,
+  Bus, CalendarOff, CreditCard,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
@@ -20,13 +21,17 @@ const allNavItems: NavItem[] = [
   { to: '/schools', label: 'Schools', icon: School, roles: ['SUPER_ADMIN'] },
   { to: '/students', label: 'Students', icon: GraduationCap, roles: ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'PRINCIPAL', 'TEACHER', 'OFFICE_STAFF', 'ACCOUNTANT'] },
   { to: '/staff', label: 'Staff', icon: Users, roles: ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'PRINCIPAL', 'OFFICE_STAFF'] },
-  { to: '/classes', label: 'Classes', icon: BookOpen, roles: ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'PRINCIPAL', 'TEACHER'] },
+  { to: '/academic-setup', label: 'Academic Setup', icon: Cog, roles: ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'PRINCIPAL', 'OFFICE_STAFF'] },
   { to: '/attendance', label: 'Attendance', icon: UserCheck, roles: ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'PRINCIPAL', 'TEACHER', 'OFFICE_STAFF'] },
+  { to: '/guardians', label: 'Guardians', icon: Shield, roles: ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'PRINCIPAL', 'OFFICE_STAFF'] },
   { to: '/fees', label: 'Fees', icon: DollarSign, roles: ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'PRINCIPAL', 'ACCOUNTANT', 'OFFICE_STAFF', 'PARENT', 'GUARDIAN'] },
+  { to: '/fees', label: 'My Fees', icon: CreditCard, roles: ['STUDENT'] },
   { to: '/salary', label: 'Salary', icon: TrendingUp, roles: ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'PRINCIPAL', 'ACCOUNTANT'] },
   { to: '/notices', label: 'Notices', icon: Bell, roles: ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'PRINCIPAL', 'TEACHER', 'OFFICE_STAFF', 'STUDENT', 'PARENT', 'GUARDIAN'] },
   { to: '/results', label: 'Results', icon: ClipboardList, roles: ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'PRINCIPAL', 'TEACHER', 'STUDENT', 'PARENT', 'GUARDIAN'] },
   { to: '/library', label: 'Library', icon: Library, roles: ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'PRINCIPAL', 'LIBRARIAN', 'STUDENT'] },
+  { to: '/transport', label: 'Transport', icon: Bus, roles: ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'PRINCIPAL', 'OFFICE_STAFF'] },
+  { to: '/leaves', label: 'Staff Leaves', icon: CalendarOff, roles: ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'PRINCIPAL', 'TEACHER', 'OFFICE_STAFF', 'ACCOUNTANT', 'LIBRARIAN'] },
   { to: '/settings', label: 'Settings', icon: Settings, roles: ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'PRINCIPAL'] },
 ]
 

@@ -31,6 +31,12 @@ export interface ResetPasswordPayload {
 
 export type OtpPurpose = 'PHONE_VERIFICATION' | 'PASSWORD_RESET' | 'LOGIN' | 'EMAIL_VERIFICATION'
 
+export interface StudentLoginPayload {
+  loginId: string
+  schoolId: string
+  password: string
+}
+
 export const authApi = {
   register: (payload: RegisterPayload) =>
     apiClient.post<ApiResponse<{ phone: string }>>('/auth/register', payload),
@@ -58,4 +64,7 @@ export const authApi = {
 
   getMe: () =>
     apiClient.get<ApiResponse<UserProfile>>('/auth/me'),
+
+  studentLogin: (payload: StudentLoginPayload) =>
+    apiClient.post<ApiResponse<LoginResponse>>('/auth/student-login', payload),
 }

@@ -16,7 +16,7 @@ export function AdminDashboard({ schoolId, roleName }: Props) {
   const { data: feeSummary, isLoading: feeLoading } = useFeeSummary(schoolId)
   const { data: dueReport, isLoading: dueLoading } = useDueReport(schoolId)
 
-  const totalDue = dueReport?.meta.total ?? 0
+  const totalDue = dueReport?.length ?? 0
 
   return (
     <div className="space-y-6">

@@ -1,4 +1,4 @@
-import type { StaffRole, Religion, BloodGroup, MpoStatus } from '@/types/staff'
+import type { StaffRole, Religion, BloodGroup, MpoStatus, ServiceBookEntryType } from '@/types/staff'
 
 export const STAFF_ROLES: { value: StaffRole; label: string; group: string }[] = [
   { value: 'PRINCIPAL', label: 'Principal', group: 'Administration' },
@@ -54,6 +54,34 @@ export const GENDERS = [
   { value: 'FEMALE', label: 'Female' },
   { value: 'OTHER', label: 'Other' },
 ]
+
+export const SERVICE_BOOK_ENTRY_TYPES: { value: ServiceBookEntryType; label: string }[] = [
+  { value: 'JOINING', label: 'Joining' },
+  { value: 'TRANSFER', label: 'Transfer' },
+  { value: 'PROMOTION', label: 'Promotion' },
+  { value: 'INCREMENT', label: 'Increment' },
+  { value: 'MPO_ENLISTMENT', label: 'MPO Enlistment' },
+  { value: 'MPO_CESSATION', label: 'MPO Cessation' },
+  { value: 'TRAINING', label: 'Training' },
+  { value: 'DISCIPLINARY', label: 'Disciplinary' },
+  { value: 'SUSPENSION', label: 'Suspension' },
+  { value: 'RETIREMENT', label: 'Retirement' },
+  { value: 'OTHER', label: 'Other' },
+]
+
+export const SERVICE_BOOK_TYPE_COLORS: Record<ServiceBookEntryType, string> = {
+  JOINING: 'bg-green-100 text-green-700',
+  TRANSFER: 'bg-blue-100 text-blue-700',
+  PROMOTION: 'bg-violet-100 text-violet-700',
+  INCREMENT: 'bg-teal-100 text-teal-700',
+  MPO_ENLISTMENT: 'bg-amber-100 text-amber-700',
+  MPO_CESSATION: 'bg-orange-100 text-orange-700',
+  TRAINING: 'bg-cyan-100 text-cyan-700',
+  DISCIPLINARY: 'bg-red-100 text-red-700',
+  SUSPENSION: 'bg-rose-100 text-rose-700',
+  RETIREMENT: 'bg-gray-100 text-gray-600',
+  OTHER: 'bg-slate-100 text-slate-600',
+}
 
 export const ROLE_GROUP_LABELS: Record<string, string> = {
   PRINCIPAL: 'Admin',

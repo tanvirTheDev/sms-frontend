@@ -15,7 +15,22 @@ export interface SchoolListResponse {
   meta: { total: number; page: number; limit: number; totalPages: number }
 }
 
+export interface SchoolSearchResult {
+  id: string
+  name: string
+  nameBn: string | null
+  district: string | null
+  upazila: string | null
+  logoUrl: string | null
+}
+
 export const schoolsApi = {
+  search: (q: string, district?: string) =>
+    apiClient.get<{ success: boolean; data: SchoolSearchResult[]; meta: { total: number; page: number; limit: number; totalPages: number } }>(
+      '/schools/search',
+      { params: { q, district, limit: 10 } }
+    ),
+
   list: (query: ListSchoolsQuery = {}) =>
     apiClient.get<SchoolListResponse>('/schools', { params: query }),
 

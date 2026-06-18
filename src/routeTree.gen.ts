@@ -13,18 +13,40 @@ import { Route as AuthRouteRouteImport } from './routes/auth/route'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthVerifyPhoneRouteImport } from './routes/auth/verify-phone'
+import { Route as AuthStudentLoginRouteImport } from './routes/auth/student-login'
 import { Route as AuthResetPasswordRouteImport } from './routes/auth/reset-password'
 import { Route as AuthRegisterRouteImport } from './routes/auth/register'
 import { Route as AuthLoginRouteImport } from './routes/auth/login'
 import { Route as AuthForgotPasswordRouteImport } from './routes/auth/forgot-password'
 import { Route as AuthenticatedProfileRouteImport } from './routes/_authenticated/profile'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedTransportIndexRouteImport } from './routes/_authenticated/transport/index'
+import { Route as AuthenticatedStudentsIndexRouteImport } from './routes/_authenticated/students/index'
 import { Route as AuthenticatedStaffIndexRouteImport } from './routes/_authenticated/staff/index'
 import { Route as AuthenticatedSchoolsIndexRouteImport } from './routes/_authenticated/schools/index'
+import { Route as AuthenticatedSalaryIndexRouteImport } from './routes/_authenticated/salary/index'
+import { Route as AuthenticatedResultsIndexRouteImport } from './routes/_authenticated/results/index'
+import { Route as AuthenticatedNoticesIndexRouteImport } from './routes/_authenticated/notices/index'
+import { Route as AuthenticatedLibraryIndexRouteImport } from './routes/_authenticated/library/index'
+import { Route as AuthenticatedLeavesIndexRouteImport } from './routes/_authenticated/leaves/index'
+import { Route as AuthenticatedGuardiansIndexRouteImport } from './routes/_authenticated/guardians/index'
+import { Route as AuthenticatedFeesIndexRouteImport } from './routes/_authenticated/fees/index'
+import { Route as AuthenticatedAttendanceIndexRouteImport } from './routes/_authenticated/attendance/index'
+import { Route as AuthenticatedAcademicSetupIndexRouteImport } from './routes/_authenticated/academic-setup/index'
+import { Route as AuthenticatedStudentsNewRouteImport } from './routes/_authenticated/students/new'
+import { Route as AuthenticatedStudentsStudentIdRouteImport } from './routes/_authenticated/students/$studentId'
 import { Route as AuthenticatedStaffNewRouteImport } from './routes/_authenticated/staff/new'
 import { Route as AuthenticatedStaffStaffIdRouteImport } from './routes/_authenticated/staff/$staffId'
 import { Route as AuthenticatedSchoolsNewRouteImport } from './routes/_authenticated/schools/new'
 import { Route as AuthenticatedSchoolsSchoolIdRouteImport } from './routes/_authenticated/schools/$schoolId'
+import { Route as AuthenticatedPaymentSuccessRouteImport } from './routes/_authenticated/payment/success'
+import { Route as AuthenticatedPaymentProcessingRouteImport } from './routes/_authenticated/payment/processing'
+import { Route as AuthenticatedPaymentFailedRouteImport } from './routes/_authenticated/payment/failed'
+import { Route as AuthenticatedPaymentErrorRouteImport } from './routes/_authenticated/payment/error'
+import { Route as AuthenticatedPaymentCancelledRouteImport } from './routes/_authenticated/payment/cancelled'
+import { Route as AuthenticatedAcademicSetupWingsRouteImport } from './routes/_authenticated/academic-setup/wings'
+import { Route as AuthenticatedAcademicSetupSubjectsRouteImport } from './routes/_authenticated/academic-setup/subjects'
+import { Route as AuthenticatedAcademicSetupClassesRouteImport } from './routes/_authenticated/academic-setup/classes'
 
 const AuthRouteRoute = AuthRouteRouteImport.update({
   id: '/auth',
@@ -43,6 +65,11 @@ const IndexRoute = IndexRouteImport.update({
 const AuthVerifyPhoneRoute = AuthVerifyPhoneRouteImport.update({
   id: '/verify-phone',
   path: '/verify-phone',
+  getParentRoute: () => AuthRouteRoute,
+} as any)
+const AuthStudentLoginRoute = AuthStudentLoginRouteImport.update({
+  id: '/student-login',
+  path: '/student-login',
   getParentRoute: () => AuthRouteRoute,
 } as any)
 const AuthResetPasswordRoute = AuthResetPasswordRouteImport.update({
@@ -75,6 +102,18 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedTransportIndexRoute =
+  AuthenticatedTransportIndexRouteImport.update({
+    id: '/transport/',
+    path: '/transport/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedStudentsIndexRoute =
+  AuthenticatedStudentsIndexRouteImport.update({
+    id: '/students/',
+    path: '/students/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedStaffIndexRoute = AuthenticatedStaffIndexRouteImport.update({
   id: '/staff/',
   path: '/staff/',
@@ -84,6 +123,71 @@ const AuthenticatedSchoolsIndexRoute =
   AuthenticatedSchoolsIndexRouteImport.update({
     id: '/schools/',
     path: '/schools/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedSalaryIndexRoute =
+  AuthenticatedSalaryIndexRouteImport.update({
+    id: '/salary/',
+    path: '/salary/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedResultsIndexRoute =
+  AuthenticatedResultsIndexRouteImport.update({
+    id: '/results/',
+    path: '/results/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedNoticesIndexRoute =
+  AuthenticatedNoticesIndexRouteImport.update({
+    id: '/notices/',
+    path: '/notices/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedLibraryIndexRoute =
+  AuthenticatedLibraryIndexRouteImport.update({
+    id: '/library/',
+    path: '/library/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedLeavesIndexRoute =
+  AuthenticatedLeavesIndexRouteImport.update({
+    id: '/leaves/',
+    path: '/leaves/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedGuardiansIndexRoute =
+  AuthenticatedGuardiansIndexRouteImport.update({
+    id: '/guardians/',
+    path: '/guardians/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedFeesIndexRoute = AuthenticatedFeesIndexRouteImport.update({
+  id: '/fees/',
+  path: '/fees/',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedAttendanceIndexRoute =
+  AuthenticatedAttendanceIndexRouteImport.update({
+    id: '/attendance/',
+    path: '/attendance/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAcademicSetupIndexRoute =
+  AuthenticatedAcademicSetupIndexRouteImport.update({
+    id: '/academic-setup/',
+    path: '/academic-setup/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedStudentsNewRoute =
+  AuthenticatedStudentsNewRouteImport.update({
+    id: '/students/new',
+    path: '/students/new',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedStudentsStudentIdRoute =
+  AuthenticatedStudentsStudentIdRouteImport.update({
+    id: '/students/$studentId',
+    path: '/students/$studentId',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
 const AuthenticatedStaffNewRoute = AuthenticatedStaffNewRouteImport.update({
@@ -108,6 +212,54 @@ const AuthenticatedSchoolsSchoolIdRoute =
     path: '/schools/$schoolId',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedPaymentSuccessRoute =
+  AuthenticatedPaymentSuccessRouteImport.update({
+    id: '/payment/success',
+    path: '/payment/success',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPaymentProcessingRoute =
+  AuthenticatedPaymentProcessingRouteImport.update({
+    id: '/payment/processing',
+    path: '/payment/processing',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPaymentFailedRoute =
+  AuthenticatedPaymentFailedRouteImport.update({
+    id: '/payment/failed',
+    path: '/payment/failed',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPaymentErrorRoute =
+  AuthenticatedPaymentErrorRouteImport.update({
+    id: '/payment/error',
+    path: '/payment/error',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedPaymentCancelledRoute =
+  AuthenticatedPaymentCancelledRouteImport.update({
+    id: '/payment/cancelled',
+    path: '/payment/cancelled',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAcademicSetupWingsRoute =
+  AuthenticatedAcademicSetupWingsRouteImport.update({
+    id: '/academic-setup/wings',
+    path: '/academic-setup/wings',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAcademicSetupSubjectsRoute =
+  AuthenticatedAcademicSetupSubjectsRouteImport.update({
+    id: '/academic-setup/subjects',
+    path: '/academic-setup/subjects',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
+const AuthenticatedAcademicSetupClassesRoute =
+  AuthenticatedAcademicSetupClassesRouteImport.update({
+    id: '/academic-setup/classes',
+    path: '/academic-setup/classes',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -118,13 +270,35 @@ export interface FileRoutesByFullPath {
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
+  '/auth/student-login': typeof AuthStudentLoginRoute
   '/auth/verify-phone': typeof AuthVerifyPhoneRoute
+  '/academic-setup/classes': typeof AuthenticatedAcademicSetupClassesRoute
+  '/academic-setup/subjects': typeof AuthenticatedAcademicSetupSubjectsRoute
+  '/academic-setup/wings': typeof AuthenticatedAcademicSetupWingsRoute
+  '/payment/cancelled': typeof AuthenticatedPaymentCancelledRoute
+  '/payment/error': typeof AuthenticatedPaymentErrorRoute
+  '/payment/failed': typeof AuthenticatedPaymentFailedRoute
+  '/payment/processing': typeof AuthenticatedPaymentProcessingRoute
+  '/payment/success': typeof AuthenticatedPaymentSuccessRoute
   '/schools/$schoolId': typeof AuthenticatedSchoolsSchoolIdRoute
   '/schools/new': typeof AuthenticatedSchoolsNewRoute
   '/staff/$staffId': typeof AuthenticatedStaffStaffIdRoute
   '/staff/new': typeof AuthenticatedStaffNewRoute
+  '/students/$studentId': typeof AuthenticatedStudentsStudentIdRoute
+  '/students/new': typeof AuthenticatedStudentsNewRoute
+  '/academic-setup/': typeof AuthenticatedAcademicSetupIndexRoute
+  '/attendance/': typeof AuthenticatedAttendanceIndexRoute
+  '/fees/': typeof AuthenticatedFeesIndexRoute
+  '/guardians/': typeof AuthenticatedGuardiansIndexRoute
+  '/leaves/': typeof AuthenticatedLeavesIndexRoute
+  '/library/': typeof AuthenticatedLibraryIndexRoute
+  '/notices/': typeof AuthenticatedNoticesIndexRoute
+  '/results/': typeof AuthenticatedResultsIndexRoute
+  '/salary/': typeof AuthenticatedSalaryIndexRoute
   '/schools/': typeof AuthenticatedSchoolsIndexRoute
   '/staff/': typeof AuthenticatedStaffIndexRoute
+  '/students/': typeof AuthenticatedStudentsIndexRoute
+  '/transport/': typeof AuthenticatedTransportIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -135,13 +309,35 @@ export interface FileRoutesByTo {
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
+  '/auth/student-login': typeof AuthStudentLoginRoute
   '/auth/verify-phone': typeof AuthVerifyPhoneRoute
+  '/academic-setup/classes': typeof AuthenticatedAcademicSetupClassesRoute
+  '/academic-setup/subjects': typeof AuthenticatedAcademicSetupSubjectsRoute
+  '/academic-setup/wings': typeof AuthenticatedAcademicSetupWingsRoute
+  '/payment/cancelled': typeof AuthenticatedPaymentCancelledRoute
+  '/payment/error': typeof AuthenticatedPaymentErrorRoute
+  '/payment/failed': typeof AuthenticatedPaymentFailedRoute
+  '/payment/processing': typeof AuthenticatedPaymentProcessingRoute
+  '/payment/success': typeof AuthenticatedPaymentSuccessRoute
   '/schools/$schoolId': typeof AuthenticatedSchoolsSchoolIdRoute
   '/schools/new': typeof AuthenticatedSchoolsNewRoute
   '/staff/$staffId': typeof AuthenticatedStaffStaffIdRoute
   '/staff/new': typeof AuthenticatedStaffNewRoute
+  '/students/$studentId': typeof AuthenticatedStudentsStudentIdRoute
+  '/students/new': typeof AuthenticatedStudentsNewRoute
+  '/academic-setup': typeof AuthenticatedAcademicSetupIndexRoute
+  '/attendance': typeof AuthenticatedAttendanceIndexRoute
+  '/fees': typeof AuthenticatedFeesIndexRoute
+  '/guardians': typeof AuthenticatedGuardiansIndexRoute
+  '/leaves': typeof AuthenticatedLeavesIndexRoute
+  '/library': typeof AuthenticatedLibraryIndexRoute
+  '/notices': typeof AuthenticatedNoticesIndexRoute
+  '/results': typeof AuthenticatedResultsIndexRoute
+  '/salary': typeof AuthenticatedSalaryIndexRoute
   '/schools': typeof AuthenticatedSchoolsIndexRoute
   '/staff': typeof AuthenticatedStaffIndexRoute
+  '/students': typeof AuthenticatedStudentsIndexRoute
+  '/transport': typeof AuthenticatedTransportIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -154,13 +350,35 @@ export interface FileRoutesById {
   '/auth/login': typeof AuthLoginRoute
   '/auth/register': typeof AuthRegisterRoute
   '/auth/reset-password': typeof AuthResetPasswordRoute
+  '/auth/student-login': typeof AuthStudentLoginRoute
   '/auth/verify-phone': typeof AuthVerifyPhoneRoute
+  '/_authenticated/academic-setup/classes': typeof AuthenticatedAcademicSetupClassesRoute
+  '/_authenticated/academic-setup/subjects': typeof AuthenticatedAcademicSetupSubjectsRoute
+  '/_authenticated/academic-setup/wings': typeof AuthenticatedAcademicSetupWingsRoute
+  '/_authenticated/payment/cancelled': typeof AuthenticatedPaymentCancelledRoute
+  '/_authenticated/payment/error': typeof AuthenticatedPaymentErrorRoute
+  '/_authenticated/payment/failed': typeof AuthenticatedPaymentFailedRoute
+  '/_authenticated/payment/processing': typeof AuthenticatedPaymentProcessingRoute
+  '/_authenticated/payment/success': typeof AuthenticatedPaymentSuccessRoute
   '/_authenticated/schools/$schoolId': typeof AuthenticatedSchoolsSchoolIdRoute
   '/_authenticated/schools/new': typeof AuthenticatedSchoolsNewRoute
   '/_authenticated/staff/$staffId': typeof AuthenticatedStaffStaffIdRoute
   '/_authenticated/staff/new': typeof AuthenticatedStaffNewRoute
+  '/_authenticated/students/$studentId': typeof AuthenticatedStudentsStudentIdRoute
+  '/_authenticated/students/new': typeof AuthenticatedStudentsNewRoute
+  '/_authenticated/academic-setup/': typeof AuthenticatedAcademicSetupIndexRoute
+  '/_authenticated/attendance/': typeof AuthenticatedAttendanceIndexRoute
+  '/_authenticated/fees/': typeof AuthenticatedFeesIndexRoute
+  '/_authenticated/guardians/': typeof AuthenticatedGuardiansIndexRoute
+  '/_authenticated/leaves/': typeof AuthenticatedLeavesIndexRoute
+  '/_authenticated/library/': typeof AuthenticatedLibraryIndexRoute
+  '/_authenticated/notices/': typeof AuthenticatedNoticesIndexRoute
+  '/_authenticated/results/': typeof AuthenticatedResultsIndexRoute
+  '/_authenticated/salary/': typeof AuthenticatedSalaryIndexRoute
   '/_authenticated/schools/': typeof AuthenticatedSchoolsIndexRoute
   '/_authenticated/staff/': typeof AuthenticatedStaffIndexRoute
+  '/_authenticated/students/': typeof AuthenticatedStudentsIndexRoute
+  '/_authenticated/transport/': typeof AuthenticatedTransportIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -173,13 +391,35 @@ export interface FileRouteTypes {
     | '/auth/login'
     | '/auth/register'
     | '/auth/reset-password'
+    | '/auth/student-login'
     | '/auth/verify-phone'
+    | '/academic-setup/classes'
+    | '/academic-setup/subjects'
+    | '/academic-setup/wings'
+    | '/payment/cancelled'
+    | '/payment/error'
+    | '/payment/failed'
+    | '/payment/processing'
+    | '/payment/success'
     | '/schools/$schoolId'
     | '/schools/new'
     | '/staff/$staffId'
     | '/staff/new'
+    | '/students/$studentId'
+    | '/students/new'
+    | '/academic-setup/'
+    | '/attendance/'
+    | '/fees/'
+    | '/guardians/'
+    | '/leaves/'
+    | '/library/'
+    | '/notices/'
+    | '/results/'
+    | '/salary/'
     | '/schools/'
     | '/staff/'
+    | '/students/'
+    | '/transport/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -190,13 +430,35 @@ export interface FileRouteTypes {
     | '/auth/login'
     | '/auth/register'
     | '/auth/reset-password'
+    | '/auth/student-login'
     | '/auth/verify-phone'
+    | '/academic-setup/classes'
+    | '/academic-setup/subjects'
+    | '/academic-setup/wings'
+    | '/payment/cancelled'
+    | '/payment/error'
+    | '/payment/failed'
+    | '/payment/processing'
+    | '/payment/success'
     | '/schools/$schoolId'
     | '/schools/new'
     | '/staff/$staffId'
     | '/staff/new'
+    | '/students/$studentId'
+    | '/students/new'
+    | '/academic-setup'
+    | '/attendance'
+    | '/fees'
+    | '/guardians'
+    | '/leaves'
+    | '/library'
+    | '/notices'
+    | '/results'
+    | '/salary'
     | '/schools'
     | '/staff'
+    | '/students'
+    | '/transport'
   id:
     | '__root__'
     | '/'
@@ -208,13 +470,35 @@ export interface FileRouteTypes {
     | '/auth/login'
     | '/auth/register'
     | '/auth/reset-password'
+    | '/auth/student-login'
     | '/auth/verify-phone'
+    | '/_authenticated/academic-setup/classes'
+    | '/_authenticated/academic-setup/subjects'
+    | '/_authenticated/academic-setup/wings'
+    | '/_authenticated/payment/cancelled'
+    | '/_authenticated/payment/error'
+    | '/_authenticated/payment/failed'
+    | '/_authenticated/payment/processing'
+    | '/_authenticated/payment/success'
     | '/_authenticated/schools/$schoolId'
     | '/_authenticated/schools/new'
     | '/_authenticated/staff/$staffId'
     | '/_authenticated/staff/new'
+    | '/_authenticated/students/$studentId'
+    | '/_authenticated/students/new'
+    | '/_authenticated/academic-setup/'
+    | '/_authenticated/attendance/'
+    | '/_authenticated/fees/'
+    | '/_authenticated/guardians/'
+    | '/_authenticated/leaves/'
+    | '/_authenticated/library/'
+    | '/_authenticated/notices/'
+    | '/_authenticated/results/'
+    | '/_authenticated/salary/'
     | '/_authenticated/schools/'
     | '/_authenticated/staff/'
+    | '/_authenticated/students/'
+    | '/_authenticated/transport/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -251,6 +535,13 @@ declare module '@tanstack/react-router' {
       path: '/verify-phone'
       fullPath: '/auth/verify-phone'
       preLoaderRoute: typeof AuthVerifyPhoneRouteImport
+      parentRoute: typeof AuthRouteRoute
+    }
+    '/auth/student-login': {
+      id: '/auth/student-login'
+      path: '/student-login'
+      fullPath: '/auth/student-login'
+      preLoaderRoute: typeof AuthStudentLoginRouteImport
       parentRoute: typeof AuthRouteRoute
     }
     '/auth/reset-password': {
@@ -295,6 +586,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/transport/': {
+      id: '/_authenticated/transport/'
+      path: '/transport'
+      fullPath: '/transport/'
+      preLoaderRoute: typeof AuthenticatedTransportIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/students/': {
+      id: '/_authenticated/students/'
+      path: '/students'
+      fullPath: '/students/'
+      preLoaderRoute: typeof AuthenticatedStudentsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/staff/': {
       id: '/_authenticated/staff/'
       path: '/staff'
@@ -307,6 +612,83 @@ declare module '@tanstack/react-router' {
       path: '/schools'
       fullPath: '/schools/'
       preLoaderRoute: typeof AuthenticatedSchoolsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/salary/': {
+      id: '/_authenticated/salary/'
+      path: '/salary'
+      fullPath: '/salary/'
+      preLoaderRoute: typeof AuthenticatedSalaryIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/results/': {
+      id: '/_authenticated/results/'
+      path: '/results'
+      fullPath: '/results/'
+      preLoaderRoute: typeof AuthenticatedResultsIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/notices/': {
+      id: '/_authenticated/notices/'
+      path: '/notices'
+      fullPath: '/notices/'
+      preLoaderRoute: typeof AuthenticatedNoticesIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/library/': {
+      id: '/_authenticated/library/'
+      path: '/library'
+      fullPath: '/library/'
+      preLoaderRoute: typeof AuthenticatedLibraryIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/leaves/': {
+      id: '/_authenticated/leaves/'
+      path: '/leaves'
+      fullPath: '/leaves/'
+      preLoaderRoute: typeof AuthenticatedLeavesIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/guardians/': {
+      id: '/_authenticated/guardians/'
+      path: '/guardians'
+      fullPath: '/guardians/'
+      preLoaderRoute: typeof AuthenticatedGuardiansIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/fees/': {
+      id: '/_authenticated/fees/'
+      path: '/fees'
+      fullPath: '/fees/'
+      preLoaderRoute: typeof AuthenticatedFeesIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/attendance/': {
+      id: '/_authenticated/attendance/'
+      path: '/attendance'
+      fullPath: '/attendance/'
+      preLoaderRoute: typeof AuthenticatedAttendanceIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/academic-setup/': {
+      id: '/_authenticated/academic-setup/'
+      path: '/academic-setup'
+      fullPath: '/academic-setup/'
+      preLoaderRoute: typeof AuthenticatedAcademicSetupIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/students/new': {
+      id: '/_authenticated/students/new'
+      path: '/students/new'
+      fullPath: '/students/new'
+      preLoaderRoute: typeof AuthenticatedStudentsNewRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/students/$studentId': {
+      id: '/_authenticated/students/$studentId'
+      path: '/students/$studentId'
+      fullPath: '/students/$studentId'
+      preLoaderRoute: typeof AuthenticatedStudentsStudentIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/staff/new': {
@@ -337,29 +719,129 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedSchoolsSchoolIdRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/payment/success': {
+      id: '/_authenticated/payment/success'
+      path: '/payment/success'
+      fullPath: '/payment/success'
+      preLoaderRoute: typeof AuthenticatedPaymentSuccessRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/payment/processing': {
+      id: '/_authenticated/payment/processing'
+      path: '/payment/processing'
+      fullPath: '/payment/processing'
+      preLoaderRoute: typeof AuthenticatedPaymentProcessingRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/payment/failed': {
+      id: '/_authenticated/payment/failed'
+      path: '/payment/failed'
+      fullPath: '/payment/failed'
+      preLoaderRoute: typeof AuthenticatedPaymentFailedRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/payment/error': {
+      id: '/_authenticated/payment/error'
+      path: '/payment/error'
+      fullPath: '/payment/error'
+      preLoaderRoute: typeof AuthenticatedPaymentErrorRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/payment/cancelled': {
+      id: '/_authenticated/payment/cancelled'
+      path: '/payment/cancelled'
+      fullPath: '/payment/cancelled'
+      preLoaderRoute: typeof AuthenticatedPaymentCancelledRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/academic-setup/wings': {
+      id: '/_authenticated/academic-setup/wings'
+      path: '/academic-setup/wings'
+      fullPath: '/academic-setup/wings'
+      preLoaderRoute: typeof AuthenticatedAcademicSetupWingsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/academic-setup/subjects': {
+      id: '/_authenticated/academic-setup/subjects'
+      path: '/academic-setup/subjects'
+      fullPath: '/academic-setup/subjects'
+      preLoaderRoute: typeof AuthenticatedAcademicSetupSubjectsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/academic-setup/classes': {
+      id: '/_authenticated/academic-setup/classes'
+      path: '/academic-setup/classes'
+      fullPath: '/academic-setup/classes'
+      preLoaderRoute: typeof AuthenticatedAcademicSetupClassesRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
   }
 }
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
+  AuthenticatedAcademicSetupClassesRoute: typeof AuthenticatedAcademicSetupClassesRoute
+  AuthenticatedAcademicSetupSubjectsRoute: typeof AuthenticatedAcademicSetupSubjectsRoute
+  AuthenticatedAcademicSetupWingsRoute: typeof AuthenticatedAcademicSetupWingsRoute
+  AuthenticatedPaymentCancelledRoute: typeof AuthenticatedPaymentCancelledRoute
+  AuthenticatedPaymentErrorRoute: typeof AuthenticatedPaymentErrorRoute
+  AuthenticatedPaymentFailedRoute: typeof AuthenticatedPaymentFailedRoute
+  AuthenticatedPaymentProcessingRoute: typeof AuthenticatedPaymentProcessingRoute
+  AuthenticatedPaymentSuccessRoute: typeof AuthenticatedPaymentSuccessRoute
   AuthenticatedSchoolsSchoolIdRoute: typeof AuthenticatedSchoolsSchoolIdRoute
   AuthenticatedSchoolsNewRoute: typeof AuthenticatedSchoolsNewRoute
   AuthenticatedStaffStaffIdRoute: typeof AuthenticatedStaffStaffIdRoute
   AuthenticatedStaffNewRoute: typeof AuthenticatedStaffNewRoute
+  AuthenticatedStudentsStudentIdRoute: typeof AuthenticatedStudentsStudentIdRoute
+  AuthenticatedStudentsNewRoute: typeof AuthenticatedStudentsNewRoute
+  AuthenticatedAcademicSetupIndexRoute: typeof AuthenticatedAcademicSetupIndexRoute
+  AuthenticatedAttendanceIndexRoute: typeof AuthenticatedAttendanceIndexRoute
+  AuthenticatedFeesIndexRoute: typeof AuthenticatedFeesIndexRoute
+  AuthenticatedGuardiansIndexRoute: typeof AuthenticatedGuardiansIndexRoute
+  AuthenticatedLeavesIndexRoute: typeof AuthenticatedLeavesIndexRoute
+  AuthenticatedLibraryIndexRoute: typeof AuthenticatedLibraryIndexRoute
+  AuthenticatedNoticesIndexRoute: typeof AuthenticatedNoticesIndexRoute
+  AuthenticatedResultsIndexRoute: typeof AuthenticatedResultsIndexRoute
+  AuthenticatedSalaryIndexRoute: typeof AuthenticatedSalaryIndexRoute
   AuthenticatedSchoolsIndexRoute: typeof AuthenticatedSchoolsIndexRoute
   AuthenticatedStaffIndexRoute: typeof AuthenticatedStaffIndexRoute
+  AuthenticatedStudentsIndexRoute: typeof AuthenticatedStudentsIndexRoute
+  AuthenticatedTransportIndexRoute: typeof AuthenticatedTransportIndexRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
+  AuthenticatedAcademicSetupClassesRoute:
+    AuthenticatedAcademicSetupClassesRoute,
+  AuthenticatedAcademicSetupSubjectsRoute:
+    AuthenticatedAcademicSetupSubjectsRoute,
+  AuthenticatedAcademicSetupWingsRoute: AuthenticatedAcademicSetupWingsRoute,
+  AuthenticatedPaymentCancelledRoute: AuthenticatedPaymentCancelledRoute,
+  AuthenticatedPaymentErrorRoute: AuthenticatedPaymentErrorRoute,
+  AuthenticatedPaymentFailedRoute: AuthenticatedPaymentFailedRoute,
+  AuthenticatedPaymentProcessingRoute: AuthenticatedPaymentProcessingRoute,
+  AuthenticatedPaymentSuccessRoute: AuthenticatedPaymentSuccessRoute,
   AuthenticatedSchoolsSchoolIdRoute: AuthenticatedSchoolsSchoolIdRoute,
   AuthenticatedSchoolsNewRoute: AuthenticatedSchoolsNewRoute,
   AuthenticatedStaffStaffIdRoute: AuthenticatedStaffStaffIdRoute,
   AuthenticatedStaffNewRoute: AuthenticatedStaffNewRoute,
+  AuthenticatedStudentsStudentIdRoute: AuthenticatedStudentsStudentIdRoute,
+  AuthenticatedStudentsNewRoute: AuthenticatedStudentsNewRoute,
+  AuthenticatedAcademicSetupIndexRoute: AuthenticatedAcademicSetupIndexRoute,
+  AuthenticatedAttendanceIndexRoute: AuthenticatedAttendanceIndexRoute,
+  AuthenticatedFeesIndexRoute: AuthenticatedFeesIndexRoute,
+  AuthenticatedGuardiansIndexRoute: AuthenticatedGuardiansIndexRoute,
+  AuthenticatedLeavesIndexRoute: AuthenticatedLeavesIndexRoute,
+  AuthenticatedLibraryIndexRoute: AuthenticatedLibraryIndexRoute,
+  AuthenticatedNoticesIndexRoute: AuthenticatedNoticesIndexRoute,
+  AuthenticatedResultsIndexRoute: AuthenticatedResultsIndexRoute,
+  AuthenticatedSalaryIndexRoute: AuthenticatedSalaryIndexRoute,
   AuthenticatedSchoolsIndexRoute: AuthenticatedSchoolsIndexRoute,
   AuthenticatedStaffIndexRoute: AuthenticatedStaffIndexRoute,
+  AuthenticatedStudentsIndexRoute: AuthenticatedStudentsIndexRoute,
+  AuthenticatedTransportIndexRoute: AuthenticatedTransportIndexRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
@@ -370,6 +852,7 @@ interface AuthRouteRouteChildren {
   AuthLoginRoute: typeof AuthLoginRoute
   AuthRegisterRoute: typeof AuthRegisterRoute
   AuthResetPasswordRoute: typeof AuthResetPasswordRoute
+  AuthStudentLoginRoute: typeof AuthStudentLoginRoute
   AuthVerifyPhoneRoute: typeof AuthVerifyPhoneRoute
 }
 
@@ -378,6 +861,7 @@ const AuthRouteRouteChildren: AuthRouteRouteChildren = {
   AuthLoginRoute: AuthLoginRoute,
   AuthRegisterRoute: AuthRegisterRoute,
   AuthResetPasswordRoute: AuthResetPasswordRoute,
+  AuthStudentLoginRoute: AuthStudentLoginRoute,
   AuthVerifyPhoneRoute: AuthVerifyPhoneRoute,
 }
 

@@ -1,5 +1,10 @@
 import type { Gender } from './index'
 
+export type ServiceBookEntryType =
+  | 'JOINING' | 'TRANSFER' | 'PROMOTION' | 'INCREMENT'
+  | 'MPO_ENLISTMENT' | 'MPO_CESSATION' | 'TRAINING'
+  | 'DISCIPLINARY' | 'SUSPENSION' | 'RETIREMENT' | 'OTHER'
+
 export type StaffRole =
   | 'PRINCIPAL' | 'HEADMASTER' | 'VICE_PRINCIPAL' | 'ASSISTANT_HEADMASTER'
   | 'SENIOR_TEACHER' | 'TEACHER' | 'ASSISTANT_TEACHER' | 'LECTURER'

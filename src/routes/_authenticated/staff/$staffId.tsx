@@ -3,9 +3,16 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod/v4'
+import { format } from 'date-fns'
 import { useAuthStore } from '@/store/authStore'
-import { useStaffMember, useUpdateStaff, useDeactivateStaff } from '@/features/staff/hooks'
-import { STAFF_ROLE_OPTIONS, RELIGIONS, BLOOD_GROUPS, MPO_STATUSES, GENDERS, STAFF_ROLES } from '@/features/staff/constants'
+import {
+  useStaffMember, useUpdateStaff, useDeactivateStaff,
+  useServiceBook, useCreateServiceBookEntry, useDeleteServiceBookEntry,
+} from '@/features/staff/hooks'
+import {
+  STAFF_ROLE_OPTIONS, RELIGIONS, BLOOD_GROUPS, MPO_STATUSES, GENDERS, STAFF_ROLES,
+  SERVICE_BOOK_ENTRY_TYPES, SERVICE_BOOK_TYPE_COLORS,
+} from '@/features/staff/constants'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
@@ -14,8 +21,10 @@ import { Card, CardContent } from '@/components/ui/card'
 import { SelectField } from '@/components/common/SelectField'
 import {
   ArrowLeft, Edit2, Loader2, AlertTriangle, Phone, Mail,
-  Briefcase, Calendar, User, BookOpen,
+  Briefcase, Calendar, User, BookOpen, Plus, Trash2, ClipboardList,
 } from 'lucide-react'
+import type { ServiceBookEntryType } from '@/types/staff'
+import { cn } from '@/lib/utils'
 
 export const Route = createFileRoute('/_authenticated/staff/$staffId')({
   component: StaffDetailPage,
@@ -69,10 +78,18 @@ function StaffDetailPage() {
   const schoolId = user?.schoolId ?? ''
   const [editing, setEditing] = useState(false)
   const [confirmDeactivate, setConfirmDeactivate] = useState(false)
+  const [showAddEntry, setShowAddEntry] = useState(false)
+  const [sbType, setSbType] = useState<ServiceBookEntryType>('JOINING')
+  const [sbDate, setSbDate] = useState('')
+  const [sbDesc, setSbDesc] = useState('')
+  const [sbRef, setSbRef] = useState('')
 
   const { data: staff, isLoading } = useStaffMember(schoolId, staffId)
   const { mutate: updateStaff, isPending: updating } = useUpdateStaff(schoolId, staffId)
   const { mutate: deactivateStaff, isPending: deactivating } = useDeactivateStaff(schoolId)
+  const { data: serviceBook = [] } = useServiceBook(schoolId, staffId)
+  const { mutate: addEntry, isPending: addingEntry } = useCreateServiceBookEntry(schoolId, staffId)
+  const { mutate: deleteEntry } = useDeleteServiceBookEntry(schoolId, staffId)
 
   const canManage = user?.role && ['SUPER_ADMIN', 'SCHOOL_ADMIN', 'PRINCIPAL'].includes(user.role)
 
@@ -433,6 +450,126 @@ function StaffDetailPage() {
           )}
         </form>
       </Form>
+
+      {/* ── Service Book ── */}
+      {!editing && (
+        <Card>
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-2">
+                <ClipboardList className="h-4 w-4 text-muted-foreground" />
+                <h3 className="text-sm font-semibold">Service Book</h3>
+                {serviceBook.length > 0 && (
+                  <Badge variant="secondary" className="text-xs">{serviceBook.length}</Badge>
+                )}
+              </div>
+              {canManage && (
+                <Button size="sm" variant="outline" onClick={() => setShowAddEntry(v => !v)}>
+                  <Plus className="h-3.5 w-3.5 mr-1" />
+                  {showAddEntry ? 'Cancel' : 'Add Entry'}
+                </Button>
+              )}
+            </div>
+
+            {showAddEntry && (
+              <div className="mb-4 p-3 rounded-lg border bg-muted/30 space-y-3">
+                <div className="grid grid-cols-2 gap-3">
+                  <div>
+                    <label className="text-xs font-medium">Type</label>
+                    <select
+                      className="mt-1 w-full h-9 rounded-md border border-input bg-background px-3 text-sm"
+                      value={sbType}
+                      onChange={(e) => setSbType(e.target.value as ServiceBookEntryType)}
+                    >
+                      {SERVICE_BOOK_ENTRY_TYPES.map(t => (
+                        <option key={t.value} value={t.value}>{t.label}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="text-xs font-medium">Date</label>
+                    <Input
+                      type="date" className="mt-1 h-9"
+                      value={sbDate}
+                      onChange={(e) => setSbDate(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="text-xs font-medium">Description</label>
+                  <Input
+                    className="mt-1"
+                    placeholder="Brief description of the event"
+                    value={sbDesc}
+                    onChange={(e) => setSbDesc(e.target.value)}
+                  />
+                </div>
+                <div>
+                  <label className="text-xs font-medium">Order Ref. (optional)</label>
+                  <Input
+                    className="mt-1"
+                    placeholder="Order/memo reference number"
+                    value={sbRef}
+                    onChange={(e) => setSbRef(e.target.value)}
+                  />
+                </div>
+                <Button
+                  size="sm"
+                  disabled={addingEntry || !sbDate || !sbDesc.trim()}
+                  onClick={() => {
+                    addEntry(
+                      { type: sbType, date: sbDate, description: sbDesc.trim(), orderRef: sbRef.trim() || undefined },
+                      {
+                        onSuccess: () => {
+                          setShowAddEntry(false)
+                          setSbDate(''); setSbDesc(''); setSbRef(''); setSbType('JOINING')
+                        },
+                      },
+                    )
+                  }}
+                >
+                  {addingEntry ? <Loader2 className="h-3.5 w-3.5 animate-spin mr-1" /> : null}
+                  Save Entry
+                </Button>
+              </div>
+            )}
+
+            {serviceBook.length === 0 && !showAddEntry && (
+              <p className="text-sm text-muted-foreground text-center py-6">No service book entries yet.</p>
+            )}
+
+            <div className="space-y-2">
+              {serviceBook.map((entry) => (
+                <div key={entry.id} className="flex items-start gap-3 p-2.5 rounded-lg border group">
+                  <Badge className={cn('text-[10px] px-1.5 shrink-0 mt-0.5', SERVICE_BOOK_TYPE_COLORS[entry.type])}>
+                    {SERVICE_BOOK_ENTRY_TYPES.find(t => t.value === entry.type)?.label ?? entry.type}
+                  </Badge>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm leading-snug">{entry.description}</p>
+                    <div className="flex items-center gap-3 mt-0.5">
+                      <span className="text-xs text-muted-foreground">
+                        {format(new Date(entry.date), 'dd MMM yyyy')}
+                      </span>
+                      {entry.orderRef && (
+                        <span className="text-xs text-muted-foreground">Ref: {entry.orderRef}</span>
+                      )}
+                    </div>
+                  </div>
+                  {canManage && (
+                    <Button
+                      variant="ghost" size="icon"
+                      className="h-7 w-7 text-muted-foreground opacity-0 group-hover:opacity-100 shrink-0"
+                      onClick={() => deleteEntry(entry.id)}
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </Button>
+                  )}
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+      )}
     </div>
   )
 }

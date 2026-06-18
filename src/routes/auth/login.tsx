@@ -2,7 +2,8 @@ import { createFileRoute, Link } from '@tanstack/react-router'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { Loader2 } from 'lucide-react'
+import { Loader2, GraduationCap } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
@@ -84,12 +85,14 @@ function LoginPage() {
               {login.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               Sign in
             </Button>
-            <p className="text-sm text-muted-foreground text-center">
-              Don&apos;t have an account?{' '}
-              <Link to="/auth/register" className="text-primary hover:underline">
-                Register
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <Badge variant="outline" className="text-[10px] gap-1">
+                <GraduationCap className="h-3 w-3" /> Student?
+              </Badge>
+              <Link to="/auth/student-login" className="text-primary hover:underline">
+                Use student login
               </Link>
-            </p>
+            </div>
           </CardFooter>
         </form>
       </Form>

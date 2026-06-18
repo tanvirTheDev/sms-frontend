@@ -1,6 +1,6 @@
 import { apiClient } from './client'
 import type { ApiResponse } from '@/types'
-import type { StaffListItem, StaffDetail, CreateStaffPayload, UpdateStaffPayload } from '@/types/staff'
+import type { StaffListItem, StaffDetail, CreateStaffPayload, UpdateStaffPayload, ServiceBookEntryType } from '@/types/staff'
 
 export interface ListStaffQuery {
   page?: number
@@ -13,6 +13,30 @@ export interface ListStaffQuery {
 export interface StaffListResponse {
   success: boolean
   data: StaffListItem[]
+  meta: { total: number; page: number; limit: number; totalPages: number }
+}
+
+export interface CreateServiceBookEntryPayload {
+  type: ServiceBookEntryType
+  date: string
+  description: string
+  orderRef?: string
+}
+
+export interface ServiceBookEntry {
+  id: string
+  staffId: string
+  type: ServiceBookEntryType
+  date: string
+  description: string
+  orderRef: string | null
+  attachment: string | null
+  createdAt: string
+}
+
+export interface ServiceBookListResponse {
+  success: boolean
+  data: ServiceBookEntry[]
   meta: { total: number; page: number; limit: number; totalPages: number }
 }
 
@@ -31,4 +55,18 @@ export const staffApi = {
 
   deactivate: (schoolId: string, id: string) =>
     apiClient.delete<ApiResponse>(`/schools/${schoolId}/staff/${id}`),
+}
+
+export const serviceBookApi = {
+  list: (schoolId: string, staffId: string, params?: { page?: number; limit?: number }) =>
+    apiClient.get<ServiceBookListResponse>(`/schools/${schoolId}/staff/${staffId}/service-book`, { params }),
+
+  create: (schoolId: string, staffId: string, payload: CreateServiceBookEntryPayload) =>
+    apiClient.post<ApiResponse<ServiceBookEntry>>(`/schools/${schoolId}/staff/${staffId}/service-book`, payload),
+
+  update: (schoolId: string, staffId: string, id: string, payload: Partial<CreateServiceBookEntryPayload>) =>
+    apiClient.patch<ApiResponse<ServiceBookEntry>>(`/schools/${schoolId}/staff/${staffId}/service-book/${id}`, payload),
+
+  delete: (schoolId: string, staffId: string, id: string) =>
+    apiClient.delete<ApiResponse>(`/schools/${schoolId}/staff/${staffId}/service-book/${id}`),
 }

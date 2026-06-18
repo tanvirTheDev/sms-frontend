@@ -16,6 +16,8 @@ export interface UserProfile {
   email: string | null
   role: UserRole
   schoolId: string | null
+  staffId: string | null
+  studentId: string | null
   isActive: boolean
   isVerified: boolean
 }

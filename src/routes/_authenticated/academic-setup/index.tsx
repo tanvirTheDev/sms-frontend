@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod/v4'
 import { format } from 'date-fns'
-import { CalendarDays, Plus, Star, Pencil, Check, X, Loader2, BookOpen, FlaskConical, Layers } from 'lucide-react'
+import { CalendarDays, Plus, Star, Pencil, Check, X, Loader2, BookOpen, FlaskConical, Layers, TrendingUp } from 'lucide-react'
 import { useAuthStore } from '@/store/authStore'
 import { useAcademicYears, useCreateAcademicYear, useUpdateAcademicYear, useSetCurrentAcademicYear } from '@/features/academic-setup/hooks'
 import { Button } from '@/components/ui/button'
@@ -42,6 +42,7 @@ function SubNav() {
     { to: '/academic-setup/wings', label: 'Wings', icon: Layers },
     { to: '/academic-setup/classes', label: 'Classes & Sections', icon: BookOpen },
     { to: '/academic-setup/subjects', label: 'Subjects', icon: FlaskConical },
+    { to: '/academic-setup/promotion', label: 'Promotion', icon: TrendingUp },
   ]
   return (
     <div className="flex gap-1 border-b pb-0 mb-6 overflow-x-auto">

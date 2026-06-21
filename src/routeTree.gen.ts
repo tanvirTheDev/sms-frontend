@@ -23,6 +23,7 @@ import { Route as AuthenticatedDashboardRouteImport } from './routes/_authentica
 import { Route as AuthenticatedTransportIndexRouteImport } from './routes/_authenticated/transport/index'
 import { Route as AuthenticatedStudentsIndexRouteImport } from './routes/_authenticated/students/index'
 import { Route as AuthenticatedStaffIndexRouteImport } from './routes/_authenticated/staff/index'
+import { Route as AuthenticatedSettingsIndexRouteImport } from './routes/_authenticated/settings/index'
 import { Route as AuthenticatedSchoolsIndexRouteImport } from './routes/_authenticated/schools/index'
 import { Route as AuthenticatedSalaryIndexRouteImport } from './routes/_authenticated/salary/index'
 import { Route as AuthenticatedResultsIndexRouteImport } from './routes/_authenticated/results/index'
@@ -46,6 +47,7 @@ import { Route as AuthenticatedPaymentErrorRouteImport } from './routes/_authent
 import { Route as AuthenticatedPaymentCancelledRouteImport } from './routes/_authenticated/payment/cancelled'
 import { Route as AuthenticatedAcademicSetupWingsRouteImport } from './routes/_authenticated/academic-setup/wings'
 import { Route as AuthenticatedAcademicSetupSubjectsRouteImport } from './routes/_authenticated/academic-setup/subjects'
+import { Route as AuthenticatedAcademicSetupPromotionRouteImport } from './routes/_authenticated/academic-setup/promotion'
 import { Route as AuthenticatedAcademicSetupClassesRouteImport } from './routes/_authenticated/academic-setup/classes'
 
 const AuthRouteRoute = AuthRouteRouteImport.update({
@@ -119,6 +121,12 @@ const AuthenticatedStaffIndexRoute = AuthenticatedStaffIndexRouteImport.update({
   path: '/staff/',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedSettingsIndexRoute =
+  AuthenticatedSettingsIndexRouteImport.update({
+    id: '/settings/',
+    path: '/settings/',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedSchoolsIndexRoute =
   AuthenticatedSchoolsIndexRouteImport.update({
     id: '/schools/',
@@ -254,6 +262,12 @@ const AuthenticatedAcademicSetupSubjectsRoute =
     path: '/academic-setup/subjects',
     getParentRoute: () => AuthenticatedRouteRoute,
   } as any)
+const AuthenticatedAcademicSetupPromotionRoute =
+  AuthenticatedAcademicSetupPromotionRouteImport.update({
+    id: '/academic-setup/promotion',
+    path: '/academic-setup/promotion',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedAcademicSetupClassesRoute =
   AuthenticatedAcademicSetupClassesRouteImport.update({
     id: '/academic-setup/classes',
@@ -273,6 +287,7 @@ export interface FileRoutesByFullPath {
   '/auth/student-login': typeof AuthStudentLoginRoute
   '/auth/verify-phone': typeof AuthVerifyPhoneRoute
   '/academic-setup/classes': typeof AuthenticatedAcademicSetupClassesRoute
+  '/academic-setup/promotion': typeof AuthenticatedAcademicSetupPromotionRoute
   '/academic-setup/subjects': typeof AuthenticatedAcademicSetupSubjectsRoute
   '/academic-setup/wings': typeof AuthenticatedAcademicSetupWingsRoute
   '/payment/cancelled': typeof AuthenticatedPaymentCancelledRoute
@@ -296,6 +311,7 @@ export interface FileRoutesByFullPath {
   '/results/': typeof AuthenticatedResultsIndexRoute
   '/salary/': typeof AuthenticatedSalaryIndexRoute
   '/schools/': typeof AuthenticatedSchoolsIndexRoute
+  '/settings/': typeof AuthenticatedSettingsIndexRoute
   '/staff/': typeof AuthenticatedStaffIndexRoute
   '/students/': typeof AuthenticatedStudentsIndexRoute
   '/transport/': typeof AuthenticatedTransportIndexRoute
@@ -312,6 +328,7 @@ export interface FileRoutesByTo {
   '/auth/student-login': typeof AuthStudentLoginRoute
   '/auth/verify-phone': typeof AuthVerifyPhoneRoute
   '/academic-setup/classes': typeof AuthenticatedAcademicSetupClassesRoute
+  '/academic-setup/promotion': typeof AuthenticatedAcademicSetupPromotionRoute
   '/academic-setup/subjects': typeof AuthenticatedAcademicSetupSubjectsRoute
   '/academic-setup/wings': typeof AuthenticatedAcademicSetupWingsRoute
   '/payment/cancelled': typeof AuthenticatedPaymentCancelledRoute
@@ -335,6 +352,7 @@ export interface FileRoutesByTo {
   '/results': typeof AuthenticatedResultsIndexRoute
   '/salary': typeof AuthenticatedSalaryIndexRoute
   '/schools': typeof AuthenticatedSchoolsIndexRoute
+  '/settings': typeof AuthenticatedSettingsIndexRoute
   '/staff': typeof AuthenticatedStaffIndexRoute
   '/students': typeof AuthenticatedStudentsIndexRoute
   '/transport': typeof AuthenticatedTransportIndexRoute
@@ -353,6 +371,7 @@ export interface FileRoutesById {
   '/auth/student-login': typeof AuthStudentLoginRoute
   '/auth/verify-phone': typeof AuthVerifyPhoneRoute
   '/_authenticated/academic-setup/classes': typeof AuthenticatedAcademicSetupClassesRoute
+  '/_authenticated/academic-setup/promotion': typeof AuthenticatedAcademicSetupPromotionRoute
   '/_authenticated/academic-setup/subjects': typeof AuthenticatedAcademicSetupSubjectsRoute
   '/_authenticated/academic-setup/wings': typeof AuthenticatedAcademicSetupWingsRoute
   '/_authenticated/payment/cancelled': typeof AuthenticatedPaymentCancelledRoute
@@ -376,6 +395,7 @@ export interface FileRoutesById {
   '/_authenticated/results/': typeof AuthenticatedResultsIndexRoute
   '/_authenticated/salary/': typeof AuthenticatedSalaryIndexRoute
   '/_authenticated/schools/': typeof AuthenticatedSchoolsIndexRoute
+  '/_authenticated/settings/': typeof AuthenticatedSettingsIndexRoute
   '/_authenticated/staff/': typeof AuthenticatedStaffIndexRoute
   '/_authenticated/students/': typeof AuthenticatedStudentsIndexRoute
   '/_authenticated/transport/': typeof AuthenticatedTransportIndexRoute
@@ -394,6 +414,7 @@ export interface FileRouteTypes {
     | '/auth/student-login'
     | '/auth/verify-phone'
     | '/academic-setup/classes'
+    | '/academic-setup/promotion'
     | '/academic-setup/subjects'
     | '/academic-setup/wings'
     | '/payment/cancelled'
@@ -417,6 +438,7 @@ export interface FileRouteTypes {
     | '/results/'
     | '/salary/'
     | '/schools/'
+    | '/settings/'
     | '/staff/'
     | '/students/'
     | '/transport/'
@@ -433,6 +455,7 @@ export interface FileRouteTypes {
     | '/auth/student-login'
     | '/auth/verify-phone'
     | '/academic-setup/classes'
+    | '/academic-setup/promotion'
     | '/academic-setup/subjects'
     | '/academic-setup/wings'
     | '/payment/cancelled'
@@ -456,6 +479,7 @@ export interface FileRouteTypes {
     | '/results'
     | '/salary'
     | '/schools'
+    | '/settings'
     | '/staff'
     | '/students'
     | '/transport'
@@ -473,6 +497,7 @@ export interface FileRouteTypes {
     | '/auth/student-login'
     | '/auth/verify-phone'
     | '/_authenticated/academic-setup/classes'
+    | '/_authenticated/academic-setup/promotion'
     | '/_authenticated/academic-setup/subjects'
     | '/_authenticated/academic-setup/wings'
     | '/_authenticated/payment/cancelled'
@@ -496,6 +521,7 @@ export interface FileRouteTypes {
     | '/_authenticated/results/'
     | '/_authenticated/salary/'
     | '/_authenticated/schools/'
+    | '/_authenticated/settings/'
     | '/_authenticated/staff/'
     | '/_authenticated/students/'
     | '/_authenticated/transport/'
@@ -605,6 +631,13 @@ declare module '@tanstack/react-router' {
       path: '/staff'
       fullPath: '/staff/'
       preLoaderRoute: typeof AuthenticatedStaffIndexRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/settings/': {
+      id: '/_authenticated/settings/'
+      path: '/settings'
+      fullPath: '/settings/'
+      preLoaderRoute: typeof AuthenticatedSettingsIndexRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/schools/': {
@@ -768,6 +801,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAcademicSetupSubjectsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/academic-setup/promotion': {
+      id: '/_authenticated/academic-setup/promotion'
+      path: '/academic-setup/promotion'
+      fullPath: '/academic-setup/promotion'
+      preLoaderRoute: typeof AuthenticatedAcademicSetupPromotionRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/academic-setup/classes': {
       id: '/_authenticated/academic-setup/classes'
       path: '/academic-setup/classes'
@@ -782,6 +822,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedProfileRoute: typeof AuthenticatedProfileRoute
   AuthenticatedAcademicSetupClassesRoute: typeof AuthenticatedAcademicSetupClassesRoute
+  AuthenticatedAcademicSetupPromotionRoute: typeof AuthenticatedAcademicSetupPromotionRoute
   AuthenticatedAcademicSetupSubjectsRoute: typeof AuthenticatedAcademicSetupSubjectsRoute
   AuthenticatedAcademicSetupWingsRoute: typeof AuthenticatedAcademicSetupWingsRoute
   AuthenticatedPaymentCancelledRoute: typeof AuthenticatedPaymentCancelledRoute
@@ -805,6 +846,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedResultsIndexRoute: typeof AuthenticatedResultsIndexRoute
   AuthenticatedSalaryIndexRoute: typeof AuthenticatedSalaryIndexRoute
   AuthenticatedSchoolsIndexRoute: typeof AuthenticatedSchoolsIndexRoute
+  AuthenticatedSettingsIndexRoute: typeof AuthenticatedSettingsIndexRoute
   AuthenticatedStaffIndexRoute: typeof AuthenticatedStaffIndexRoute
   AuthenticatedStudentsIndexRoute: typeof AuthenticatedStudentsIndexRoute
   AuthenticatedTransportIndexRoute: typeof AuthenticatedTransportIndexRoute
@@ -815,6 +857,8 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedProfileRoute: AuthenticatedProfileRoute,
   AuthenticatedAcademicSetupClassesRoute:
     AuthenticatedAcademicSetupClassesRoute,
+  AuthenticatedAcademicSetupPromotionRoute:
+    AuthenticatedAcademicSetupPromotionRoute,
   AuthenticatedAcademicSetupSubjectsRoute:
     AuthenticatedAcademicSetupSubjectsRoute,
   AuthenticatedAcademicSetupWingsRoute: AuthenticatedAcademicSetupWingsRoute,
@@ -839,6 +883,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedResultsIndexRoute: AuthenticatedResultsIndexRoute,
   AuthenticatedSalaryIndexRoute: AuthenticatedSalaryIndexRoute,
   AuthenticatedSchoolsIndexRoute: AuthenticatedSchoolsIndexRoute,
+  AuthenticatedSettingsIndexRoute: AuthenticatedSettingsIndexRoute,
   AuthenticatedStaffIndexRoute: AuthenticatedStaffIndexRoute,
   AuthenticatedStudentsIndexRoute: AuthenticatedStudentsIndexRoute,
   AuthenticatedTransportIndexRoute: AuthenticatedTransportIndexRoute,

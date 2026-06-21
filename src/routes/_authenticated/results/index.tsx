@@ -343,7 +343,8 @@ function MarksTab({ schoolId, initialSchedule }: MarksTabProps) {
   const [selectedSubjectId, setSelectedSubjectId] = useState('')
   const [sections, setSections] = useState<{ id: string; name: string }[]>([])
   const [subjects, setSubjects] = useState<{ id: string; name: string; code: string | null }[]>([])
-  const [students, setStudents] = useState<{ id: string; name: string; studentId: string }[]>([])
+  // All students in the exam's class (loaded at class level, not section level)
+  const [allClassStudents, setAllClassStudents] = useState<{ id: string; name: string; studentId: string; sectionId: string }[]>([])
   const [rows, setRows] = useState<MarksEntry[]>([])
 
   const { data: schedules = [], isLoading: schedulesLoading } = useExamSchedules(schoolId || null)
@@ -374,20 +375,25 @@ function MarksTab({ schoolId, initialSchedule }: MarksTabProps) {
       .catch(() => setSubjects([]))
   }, [selectedSchedule?.classId, schoolId])
 
-  // Load students when section selected
+  // Load ALL students in the exam's class when schedule selected.
+  // Using classId (not sectionId) so students appear regardless of which section
+  // they're assigned to — section filter happens client-side when building rows.
   useEffect(() => {
-    if (!selectedSectionId || !schoolId) { setStudents([]); return }
-    studentsApi.list(schoolId, { sectionId: selectedSectionId, limit: 200, isActive: true })
-      .then((r) => setStudents(r.data.data ?? []))
-      .catch(() => setStudents([]))
-  }, [selectedSectionId, schoolId])
+    if (!selectedSchedule?.classId || !schoolId) { setAllClassStudents([]); return }
+    studentsApi.list(schoolId, { classId: selectedSchedule.classId, limit: 200, isActive: true })
+      .then((r) => setAllClassStudents(r.data.data ?? []))
+      .catch(() => setAllClassStudents([]))
+  }, [selectedSchedule?.classId, schoolId])
 
-  // Build rows from students + existing results
+  // Build rows: filter class students to selected section, then merge existing results
   useEffect(() => {
-    if (students.length === 0) { setRows([]); return }
+    const sectionStudents = selectedSectionId
+      ? allClassStudents.filter((s) => s.sectionId === selectedSectionId)
+      : []
+    if (sectionStudents.length === 0) { setRows([]); return }
     const map: Record<string, ExamResult> = {}
     existingResults.forEach((r) => { map[r.studentId] = r })
-    setRows(students.map((s) => ({
+    setRows(sectionStudents.map((s) => ({
       studentId: s.id,
       studentName: s.name,
       studentNo: s.studentId,
@@ -395,7 +401,7 @@ function MarksTab({ schoolId, initialSchedule }: MarksTabProps) {
       isAbsent: map[s.id]?.isAbsent ?? false,
       comment: map[s.id]?.teacherComment ?? '',
     })))
-  }, [students, existingResults])
+  }, [allClassStudents, existingResults, selectedSectionId])
 
   const calcGradeDisplay = (marks: number): string => {
     if (marks >= 80) return 'A+'
@@ -528,8 +534,11 @@ function MarksTab({ schoolId, initialSchedule }: MarksTabProps) {
         </div>
       )}
 
-      {selectedSchedule && selectedSectionId && selectedSubjectId && rows.length === 0 && !schedulesLoading && (
-        <div className="text-center py-10 text-muted-foreground text-sm">No students found in this section.</div>
+      {selectedSchedule && selectedSectionId && rows.length === 0 && !schedulesLoading && (
+        <div className="text-center py-10 text-muted-foreground text-sm space-y-1">
+          <p>No students found in this section.</p>
+          <p className="text-xs">Make sure students are enrolled in this section for this academic year.</p>
+        </div>
       )}
     </div>
   )

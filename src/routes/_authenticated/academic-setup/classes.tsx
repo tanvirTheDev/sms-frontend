@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useRouterState } from '@tanstack/react-router'
 import { useState } from 'react'
-import { BookOpen, Plus, Trash2, Loader2, Users, ChevronDown, ChevronRight, CalendarDays, FlaskConical, AlertTriangle, Layers } from 'lucide-react'
+import { BookOpen, Plus, Trash2, Loader2, Users, ChevronDown, ChevronRight, CalendarDays, FlaskConical, AlertTriangle, Layers, TrendingUp } from 'lucide-react'
 import { useAuthStore } from '@/store/authStore'
 import {
   useAcademicYears, useWings, useCreateWing,
@@ -44,6 +44,7 @@ function SubNav() {
     { to: '/academic-setup/wings', label: 'Wings', icon: Layers },
     { to: '/academic-setup/classes', label: 'Classes & Sections', icon: BookOpen },
     { to: '/academic-setup/subjects', label: 'Subjects', icon: FlaskConical },
+    { to: '/academic-setup/promotion', label: 'Promotion', icon: TrendingUp },
   ]
   return (
     <div className="flex gap-1 border-b pb-0 mb-6 overflow-x-auto">

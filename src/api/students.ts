@@ -26,11 +26,25 @@ export const studentsApi = {
   getById: (schoolId: string, id: string) =>
     apiClient.get<SimpleResponse<StudentDetail>>(`/schools/${schoolId}/students/${id}`),
 
-  create: (schoolId: string, payload: CreateStudentPayload) =>
-    apiClient.post<SimpleResponse<StudentListItem>>(`/schools/${schoolId}/students`, payload),
+  create: (schoolId: string, payload: CreateStudentPayload, photoFile?: File) => {
+    if (photoFile) {
+      const fd = new FormData()
+      Object.entries(payload).forEach(([k, v]) => { if (v !== undefined && v !== null) fd.append(k, String(v)) })
+      fd.append('photo', photoFile)
+      return apiClient.post<SimpleResponse<StudentListItem>>(`/schools/${schoolId}/students`, fd)
+    }
+    return apiClient.post<SimpleResponse<StudentListItem>>(`/schools/${schoolId}/students`, payload)
+  },
 
-  update: (schoolId: string, id: string, payload: UpdateStudentPayload) =>
-    apiClient.patch<SimpleResponse<StudentListItem>>(`/schools/${schoolId}/students/${id}`, payload),
+  update: (schoolId: string, id: string, payload: UpdateStudentPayload, photoFile?: File) => {
+    if (photoFile) {
+      const fd = new FormData()
+      Object.entries(payload).forEach(([k, v]) => { if (v !== undefined && v !== null) fd.append(k, String(v)) })
+      fd.append('photo', photoFile)
+      return apiClient.patch<SimpleResponse<StudentListItem>>(`/schools/${schoolId}/students/${id}`, fd)
+    }
+    return apiClient.patch<SimpleResponse<StudentListItem>>(`/schools/${schoolId}/students/${id}`, payload)
+  },
 
   drop: (schoolId: string, id: string, payload: DropStudentPayload) =>
     apiClient.delete<SimpleResponse<null>>(`/schools/${schoolId}/students/${id}`, { data: payload }),

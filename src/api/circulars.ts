@@ -22,11 +22,25 @@ export const circularsApi = {
   getById: (schoolId: string, id: string) =>
     apiClient.get<ApiResponse<Circular>>(`/schools/${schoolId}/circulars/${id}`),
 
-  create: (schoolId: string, payload: CreateCircularPayload) =>
-    apiClient.post<ApiResponse<Circular>>(`/schools/${schoolId}/circulars`, payload),
+  create: (schoolId: string, payload: CreateCircularPayload, attachmentFile?: File) => {
+    if (attachmentFile) {
+      const fd = new FormData()
+      Object.entries(payload).forEach(([k, v]) => { if (v !== undefined && v !== null) fd.append(k, String(v)) })
+      fd.append('file', attachmentFile)
+      return apiClient.post<ApiResponse<Circular>>(`/schools/${schoolId}/circulars`, fd)
+    }
+    return apiClient.post<ApiResponse<Circular>>(`/schools/${schoolId}/circulars`, payload)
+  },
 
-  update: (schoolId: string, id: string, payload: UpdateCircularPayload) =>
-    apiClient.patch<ApiResponse<Circular>>(`/schools/${schoolId}/circulars/${id}`, payload),
+  update: (schoolId: string, id: string, payload: UpdateCircularPayload, attachmentFile?: File) => {
+    if (attachmentFile) {
+      const fd = new FormData()
+      Object.entries(payload).forEach(([k, v]) => { if (v !== undefined && v !== null) fd.append(k, String(v)) })
+      fd.append('file', attachmentFile)
+      return apiClient.patch<ApiResponse<Circular>>(`/schools/${schoolId}/circulars/${id}`, fd)
+    }
+    return apiClient.patch<ApiResponse<Circular>>(`/schools/${schoolId}/circulars/${id}`, payload)
+  },
 
   publish: (schoolId: string, id: string, isPublished: boolean) =>
     apiClient.patch<ApiResponse<Circular>>(`/schools/${schoolId}/circulars/${id}/publish`, { isPublished }),

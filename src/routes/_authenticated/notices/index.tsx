@@ -1,9 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { format } from 'date-fns'
 import {
   Plus, Loader2, Pencil, Trash2, X, Save, Send, EyeOff,
-  Bell, FileText, Search, ChevronDown, ChevronUp, ExternalLink,
+  Bell, FileText, Search, ChevronDown, ChevronUp, ExternalLink, Paperclip,
 } from 'lucide-react'
 import { useAuthStore } from '@/store/authStore'
 import { useClasses } from '@/features/academic-setup/hooks'
@@ -328,8 +328,11 @@ function CircularsTab({ schoolId, canWrite }: { schoolId: string; canWrite: bool
   const [expandedId, setExpandedId] = useState<string | null>(null)
 
   const [form, setForm] = useState({
-    circularNo: '', title: '', body: '', fileUrl: '', isPublished: false,
+    circularNo: '', title: '', body: '', isPublished: false,
   })
+  const [existingFileUrl, setExistingFileUrl] = useState<string | null>(null)
+  const [attachmentFile, setAttachmentFile] = useState<File | null>(null)
+  const fileInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     const t = setTimeout(() => { setDSearch(search); setPage(1) }, 400)
@@ -350,13 +353,18 @@ function CircularsTab({ schoolId, canWrite }: { schoolId: string; canWrite: bool
   const { mutate: del } = useDeleteCircular(schoolId)
 
   const resetForm = () => {
-    setForm({ circularNo: '', title: '', body: '', fileUrl: '', isPublished: false })
+    setForm({ circularNo: '', title: '', body: '', isPublished: false })
+    setExistingFileUrl(null)
+    setAttachmentFile(null)
+    if (fileInputRef.current) fileInputRef.current.value = ''
     setEditId(null)
     setShowForm(false)
   }
 
   const startEdit = (c: Circular) => {
-    setForm({ circularNo: c.circularNo ?? '', title: c.title, body: c.body, fileUrl: c.fileUrl ?? '', isPublished: c.isPublished })
+    setForm({ circularNo: c.circularNo ?? '', title: c.title, body: c.body, isPublished: c.isPublished })
+    setExistingFileUrl(c.fileUrl ?? null)
+    setAttachmentFile(null)
     setEditId(c.id)
     setShowForm(true)
     setExpandedId(null)
@@ -366,11 +374,10 @@ function CircularsTab({ schoolId, canWrite }: { schoolId: string; canWrite: bool
     const payload = {
       circularNo: form.circularNo.trim() || undefined,
       title: form.title.trim(), body: form.body.trim(),
-      fileUrl: form.fileUrl.trim() || undefined,
       isPublished: form.isPublished,
     }
-    if (editId) update(payload, { onSuccess: resetForm })
-    else create(payload, { onSuccess: resetForm })
+    if (editId) update({ payload, attachmentFile: attachmentFile ?? undefined }, { onSuccess: resetForm })
+    else create({ payload, attachmentFile: attachmentFile ?? undefined }, { onSuccess: resetForm })
   }
 
   return (
@@ -422,8 +429,27 @@ function CircularsTab({ schoolId, canWrite }: { schoolId: string; canWrite: bool
               />
             </div>
             <div>
-              <label className="text-xs font-medium">File URL (optional)</label>
-              <Input className="mt-1 h-9" type="url" placeholder="https://…" value={form.fileUrl} onChange={(e) => setForm({ ...form, fileUrl: e.target.value })} />
+              <label className="text-xs font-medium">Attachment <span className="text-muted-foreground">(optional)</span></label>
+              <div className="mt-1 flex items-center gap-2">
+                <input ref={fileInputRef} type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" className="hidden"
+                  onChange={(e) => { setAttachmentFile(e.target.files?.[0] ?? null) }} />
+                <Button type="button" variant="outline" size="sm" onClick={() => fileInputRef.current?.click()}>
+                  <Paperclip className="h-3.5 w-3.5 mr-1" />
+                  {attachmentFile ? attachmentFile.name : 'Choose File'}
+                </Button>
+                {attachmentFile && (
+                  <button type="button" onClick={() => { setAttachmentFile(null); if (fileInputRef.current) fileInputRef.current.value = '' }}
+                    className="text-muted-foreground hover:text-destructive">
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                )}
+                {!attachmentFile && existingFileUrl && (
+                  <a href={existingFileUrl} target="_blank" rel="noopener noreferrer"
+                    className="text-xs text-primary flex items-center gap-1 hover:underline">
+                    <ExternalLink className="h-3 w-3" /> Current file
+                  </a>
+                )}
+              </div>
             </div>
             <label className="flex items-center gap-2 text-sm cursor-pointer">
               <input type="checkbox" checked={form.isPublished} onChange={(e) => setForm({ ...form, isPublished: e.target.checked })} />

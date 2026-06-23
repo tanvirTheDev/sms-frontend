@@ -108,8 +108,8 @@ export function useServiceBook(schoolId: string | null, staffId: string | null) 
 export function useCreateServiceBookEntry(schoolId: string, staffId: string) {
   const queryClient = useQueryClient()
   return useMutation({
-    mutationFn: (payload: CreateServiceBookEntryPayload) =>
-      serviceBookApi.create(schoolId, staffId, payload),
+    mutationFn: ({ payload, attachmentFile }: { payload: CreateServiceBookEntryPayload; attachmentFile?: File }) =>
+      serviceBookApi.create(schoolId, staffId, payload, attachmentFile),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [SB_KEY, schoolId, staffId] })
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY, schoolId, staffId] })

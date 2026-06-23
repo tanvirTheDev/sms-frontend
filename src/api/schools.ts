@@ -48,4 +48,10 @@ export const schoolsApi = {
 
   deactivate: (id: string) =>
     apiClient.delete<ApiResponse>(`/schools/${id}`),
+
+  uploadLogo: (id: string, file: File) => {
+    const fd = new FormData()
+    fd.append('logo', file)
+    return apiClient.post<ApiResponse<{ logoUrl: string }>>(`/schools/${id}/logo`, fd)
+  },
 }

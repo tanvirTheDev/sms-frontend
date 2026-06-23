@@ -1,9 +1,9 @@
 import { createFileRoute, Link, redirect } from '@tanstack/react-router'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod/v4'
-import { ArrowLeft, Loader2 } from 'lucide-react'
+import { ArrowLeft, Loader2, Camera, X } from 'lucide-react'
 import { useAuthStore } from '@/store/authStore'
 import { useCreateStudent } from '@/features/students/hooks'
 import { useClasses } from '@/features/academic-setup/hooks'
@@ -68,6 +68,9 @@ function EnrollStudentPage() {
 
   const { data: classes = [] } = useClasses(schoolId || null)
   const [sections, setSections] = useState<ClassSection[]>([])
+  const [photoFile, setPhotoFile] = useState<File | null>(null)
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null)
+  const photoInputRef = useRef<HTMLInputElement>(null)
 
   const form = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -89,23 +92,39 @@ function EnrollStudentPage() {
     }).catch(() => {})
   }, [watchedClassId, schoolId])
 
+  const onPhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setPhotoFile(file)
+    setPhotoPreview(URL.createObjectURL(file))
+  }
+
+  const clearPhoto = () => {
+    setPhotoFile(null)
+    setPhotoPreview(null)
+    if (photoInputRef.current) photoInputRef.current.value = ''
+  }
+
   const onSubmit = (data: FormData) => {
     const clean = (v?: string) => v?.trim() || undefined
     create({
-      name: data.name,
-      nameBn: clean(data.nameBn),
-      gender: data.gender,
-      sectionId: data.sectionId,
-      password: data.password,
-      studentId: clean(data.studentId),
-      subjectGroup: data.subjectGroup,
-      dateOfBirth: clean(data.dateOfBirth),
-      religion: data.religion,
-      bloodGroup: data.bloodGroup,
-      nid: clean(data.nid),
-      birthRegNo: clean(data.birthRegNo),
-      address: clean(data.address),
-      previousSchool: clean(data.previousSchool),
+      payload: {
+        name: data.name,
+        nameBn: clean(data.nameBn),
+        gender: data.gender,
+        sectionId: data.sectionId,
+        password: data.password,
+        studentId: clean(data.studentId),
+        subjectGroup: data.subjectGroup,
+        dateOfBirth: clean(data.dateOfBirth),
+        religion: data.religion,
+        bloodGroup: data.bloodGroup,
+        nid: clean(data.nid),
+        birthRegNo: clean(data.birthRegNo),
+        address: clean(data.address),
+        previousSchool: clean(data.previousSchool),
+      },
+      photoFile: photoFile ?? undefined,
     })
   }
 
@@ -130,6 +149,30 @@ function EnrollStudentPage() {
           <Card>
             <CardContent className="p-6">
               <SectionTitle>Personal Information</SectionTitle>
+
+              {/* Photo upload */}
+              <div className="flex items-start gap-4 mb-6">
+                <div className="relative h-24 w-24 rounded-full border-2 border-dashed border-muted-foreground/30 bg-muted/30 flex items-center justify-center overflow-hidden shrink-0">
+                  {photoPreview
+                    ? <img src={photoPreview} alt="Preview" className="h-full w-full object-cover" />
+                    : <Camera className="h-7 w-7 text-muted-foreground/50" />}
+                  {photoPreview && (
+                    <button type="button" onClick={clearPhoto}
+                      className="absolute top-0.5 right-0.5 h-5 w-5 rounded-full bg-destructive text-white flex items-center justify-center">
+                      <X className="h-3 w-3" />
+                    </button>
+                  )}
+                </div>
+                <div>
+                  <p className="text-sm font-medium mb-1">Student Photo <span className="text-muted-foreground text-xs">(optional)</span></p>
+                  <p className="text-xs text-muted-foreground mb-2">JPG, PNG, WEBP — max 5 MB</p>
+                  <input ref={photoInputRef} type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={onPhotoChange} />
+                  <Button type="button" variant="outline" size="sm" onClick={() => photoInputRef.current?.click()}>
+                    Choose Photo
+                  </Button>
+                </div>
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField control={form.control} name="name" render={({ field }) => (
                   <FormItem>

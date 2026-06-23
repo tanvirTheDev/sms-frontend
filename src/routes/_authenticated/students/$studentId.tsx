@@ -1,12 +1,12 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod/v4'
 import { format } from 'date-fns'
 import {
   ArrowLeft, Pencil, X, Loader2, GraduationCap, Phone,
-  MapPin, BookOpen, UserX, AlertTriangle, Save,
+  MapPin, BookOpen, UserX, AlertTriangle, Save, Camera,
 } from 'lucide-react'
 import { useAuthStore } from '@/store/authStore'
 import { useStudent, useUpdateStudent, useDropStudent } from '@/features/students/hooks'
@@ -70,6 +70,9 @@ function StudentDetailPage() {
   const [editing, setEditing] = useState(false)
   const [dropReason, setDropReason] = useState('')
   const [showDrop, setShowDrop] = useState(false)
+  const [photoFile, setPhotoFile] = useState<File | null>(null)
+  const [photoPreview, setPhotoPreview] = useState<string | null>(null)
+  const photoInputRef = useRef<HTMLInputElement>(null)
 
   const { data: classes = [] } = useClasses(schoolId || null)
   const [sections, setSections] = useState<ClassSection[]>([])
@@ -111,22 +114,38 @@ function StudentDetailPage() {
     }).catch(() => setSections([]))
   }, [watchedClassId, schoolId])
 
+  const onPhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setPhotoFile(file)
+    setPhotoPreview(URL.createObjectURL(file))
+  }
+
+  const clearPhoto = () => {
+    setPhotoFile(null)
+    setPhotoPreview(null)
+    if (photoInputRef.current) photoInputRef.current.value = ''
+  }
+
   const onSubmit = (data: UpdateForm) => {
     const clean = (v?: string) => v?.trim() || undefined
     update({
-      name: data.name,
-      nameBn: clean(data.nameBn),
-      gender: data.gender,
-      sectionId: clean(data.sectionId),
-      subjectGroup: data.subjectGroup,
-      dateOfBirth: clean(data.dateOfBirth),
-      religion: data.religion ?? undefined,
-      bloodGroup: data.bloodGroup ?? undefined,
-      nid: clean(data.nid),
-      birthRegNo: clean(data.birthRegNo),
-      address: clean(data.address),
-      previousSchool: clean(data.previousSchool),
-    }, { onSuccess: () => setEditing(false) })
+      payload: {
+        name: data.name,
+        nameBn: clean(data.nameBn),
+        gender: data.gender,
+        sectionId: clean(data.sectionId),
+        subjectGroup: data.subjectGroup,
+        dateOfBirth: clean(data.dateOfBirth),
+        religion: data.religion ?? undefined,
+        bloodGroup: data.bloodGroup ?? undefined,
+        nid: clean(data.nid),
+        birthRegNo: clean(data.birthRegNo),
+        address: clean(data.address),
+        previousSchool: clean(data.previousSchool),
+      },
+      photoFile: photoFile ?? undefined,
+    }, { onSuccess: () => { setEditing(false); clearPhoto() } })
   }
 
   if (isLoading) {
@@ -173,8 +192,10 @@ function StudentDetailPage() {
 
       {/* Quick info bar */}
       <div className="flex items-center gap-3 flex-wrap">
-        <div className={cn('h-14 w-14 rounded-full flex items-center justify-center text-white font-bold text-xl shrink-0', avatarColor)}>
-          {student.name.charAt(0).toUpperCase()}
+        <div className={cn('h-14 w-14 rounded-full flex items-center justify-center text-white font-bold text-xl shrink-0 overflow-hidden', avatarColor)}>
+          {student.photo
+            ? <img src={student.photo} alt={student.name} className="h-full w-full object-cover" />
+            : student.name.charAt(0).toUpperCase()}
         </div>
         <div className="space-y-1">
           {student.nameBn && <p className="text-muted-foreground text-sm">{student.nameBn}</p>}
@@ -265,6 +286,32 @@ function StudentDetailPage() {
                 <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider pb-2 border-b mb-4">
                   Personal Information
                 </h3>
+
+                {/* Photo change */}
+                <div className="flex items-start gap-4 mb-6">
+                  <div className="relative h-20 w-20 rounded-full border-2 border-dashed border-muted-foreground/30 bg-muted/30 flex items-center justify-center overflow-hidden shrink-0">
+                    {photoPreview
+                      ? <img src={photoPreview} alt="Preview" className="h-full w-full object-cover" />
+                      : student.photo
+                        ? <img src={student.photo} alt={student.name} className="h-full w-full object-cover" />
+                        : <Camera className="h-6 w-6 text-muted-foreground/50" />}
+                    {photoPreview && (
+                      <button type="button" onClick={clearPhoto}
+                        className="absolute top-0.5 right-0.5 h-5 w-5 rounded-full bg-destructive text-white flex items-center justify-center">
+                        <X className="h-3 w-3" />
+                      </button>
+                    )}
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium mb-1">Photo <span className="text-muted-foreground text-xs">(optional)</span></p>
+                    <p className="text-xs text-muted-foreground mb-2">JPG, PNG, WEBP — max 5 MB</p>
+                    <input ref={photoInputRef} type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={onPhotoChange} />
+                    <Button type="button" variant="outline" size="sm" onClick={() => photoInputRef.current?.click()}>
+                      {student.photo ? 'Change Photo' : 'Add Photo'}
+                    </Button>
+                  </div>
+                </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <FormField control={form.control} name="name" render={({ field }) => (
                     <FormItem>

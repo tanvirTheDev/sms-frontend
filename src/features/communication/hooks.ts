@@ -79,7 +79,8 @@ export function useCirculars(schoolId: string | null, query: ListCircularsQuery 
 export function useCreateCircular(schoolId: string) {
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: (payload: CreateCircularPayload) => circularsApi.create(schoolId, payload),
+    mutationFn: ({ payload, attachmentFile }: { payload: CreateCircularPayload; attachmentFile?: File }) =>
+      circularsApi.create(schoolId, payload, attachmentFile),
     onSuccess: () => { qc.invalidateQueries({ queryKey: [CK, schoolId] }); toast.success('Circular created') },
     onError: (err: any) => toast.error(err.response?.data?.message ?? 'Failed to create circular'),
   })
@@ -88,7 +89,8 @@ export function useCreateCircular(schoolId: string) {
 export function useUpdateCircular(schoolId: string, id: string) {
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: (payload: UpdateCircularPayload) => circularsApi.update(schoolId, id, payload),
+    mutationFn: ({ payload, attachmentFile }: { payload: UpdateCircularPayload; attachmentFile?: File }) =>
+      circularsApi.update(schoolId, id, payload, attachmentFile),
     onSuccess: () => { qc.invalidateQueries({ queryKey: [CK, schoolId] }); toast.success('Circular updated') },
     onError: (err: any) => toast.error(err.response?.data?.message ?? 'Failed to update circular'),
   })

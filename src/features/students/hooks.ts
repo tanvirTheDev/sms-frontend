@@ -41,7 +41,8 @@ export function useCreateStudent(schoolId: string) {
   const qc = useQueryClient()
   const navigate = useNavigate()
   return useMutation({
-    mutationFn: (payload: CreateStudentPayload) => studentsApi.create(schoolId, payload),
+    mutationFn: ({ payload, photoFile }: { payload: CreateStudentPayload; photoFile?: File }) =>
+      studentsApi.create(schoolId, payload, photoFile),
     onSuccess: ({ data }) => {
       qc.invalidateQueries({ queryKey: [QK, schoolId] })
       toast.success('Student enrolled successfully')
@@ -57,7 +58,8 @@ export function useCreateStudent(schoolId: string) {
 export function useUpdateStudent(schoolId: string, id: string) {
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: (payload: UpdateStudentPayload) => studentsApi.update(schoolId, id, payload),
+    mutationFn: ({ payload, photoFile }: { payload: UpdateStudentPayload; photoFile?: File }) =>
+      studentsApi.update(schoolId, id, payload, photoFile),
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: [QK, schoolId, id] })
       qc.invalidateQueries({ queryKey: [QK, schoolId] })

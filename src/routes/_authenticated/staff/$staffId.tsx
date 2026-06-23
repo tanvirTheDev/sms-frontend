@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod/v4'
@@ -21,7 +21,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { SelectField } from '@/components/common/SelectField'
 import {
   ArrowLeft, Edit2, Loader2, AlertTriangle, Phone, Mail,
-  Briefcase, Calendar, User, BookOpen, Plus, Trash2, ClipboardList,
+  Briefcase, Calendar, User, BookOpen, Plus, Trash2, ClipboardList, Paperclip, ExternalLink, X,
 } from 'lucide-react'
 import type { ServiceBookEntryType } from '@/types/staff'
 import { cn } from '@/lib/utils'
@@ -83,6 +83,8 @@ function StaffDetailPage() {
   const [sbDate, setSbDate] = useState('')
   const [sbDesc, setSbDesc] = useState('')
   const [sbRef, setSbRef] = useState('')
+  const [sbAttachment, setSbAttachment] = useState<File | null>(null)
+  const sbFileRef = useRef<HTMLInputElement>(null)
 
   const { data: staff, isLoading } = useStaffMember(schoolId, staffId)
   const { mutate: updateStaff, isPending: updating } = useUpdateStaff(schoolId, staffId)
@@ -513,16 +515,37 @@ function StaffDetailPage() {
                     onChange={(e) => setSbRef(e.target.value)}
                   />
                 </div>
+                <div>
+                  <label className="text-xs font-medium">Attachment <span className="text-muted-foreground">(optional)</span></label>
+                  <div className="mt-1 flex items-center gap-2">
+                    <input ref={sbFileRef} type="file" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" className="hidden"
+                      onChange={(e) => setSbAttachment(e.target.files?.[0] ?? null)} />
+                    <Button type="button" variant="outline" size="sm" onClick={() => sbFileRef.current?.click()}>
+                      <Paperclip className="h-3.5 w-3.5 mr-1" />
+                      {sbAttachment ? sbAttachment.name : 'Choose File'}
+                    </Button>
+                    {sbAttachment && (
+                      <button type="button" onClick={() => { setSbAttachment(null); if (sbFileRef.current) sbFileRef.current.value = '' }}>
+                        <X className="h-3.5 w-3.5 text-muted-foreground hover:text-destructive" />
+                      </button>
+                    )}
+                  </div>
+                </div>
                 <Button
                   size="sm"
                   disabled={addingEntry || !sbDate || !sbDesc.trim()}
                   onClick={() => {
                     addEntry(
-                      { type: sbType, date: sbDate, description: sbDesc.trim(), orderRef: sbRef.trim() || undefined },
+                      {
+                        payload: { type: sbType, date: sbDate, description: sbDesc.trim(), orderRef: sbRef.trim() || undefined },
+                        attachmentFile: sbAttachment ?? undefined,
+                      },
                       {
                         onSuccess: () => {
                           setShowAddEntry(false)
                           setSbDate(''); setSbDesc(''); setSbRef(''); setSbType('JOINING')
+                          setSbAttachment(null)
+                          if (sbFileRef.current) sbFileRef.current.value = ''
                         },
                       },
                     )
@@ -552,6 +575,13 @@ function StaffDetailPage() {
                       </span>
                       {entry.orderRef && (
                         <span className="text-xs text-muted-foreground">Ref: {entry.orderRef}</span>
+                      )}
+                      {entry.attachment && (
+                        <a href={entry.attachment} target="_blank" rel="noopener noreferrer"
+                          className="text-xs text-primary flex items-center gap-0.5 hover:underline">
+                          <Paperclip className="h-3 w-3" /> Attachment
+                          <ExternalLink className="h-2.5 w-2.5" />
+                        </a>
                       )}
                     </div>
                   </div>

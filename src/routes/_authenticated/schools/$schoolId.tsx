@@ -1,9 +1,11 @@
 import { createFileRoute, Link, redirect } from '@tanstack/react-router'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod/v4'
+import { toast } from 'sonner'
 import { useSchool, useSchoolDashboard, useUpdateSchool, useDeactivateSchool } from '@/features/schools/hooks'
+import { schoolsApi } from '@/api/schools'
 import {
   MANAGEMENT_TYPES, INSTITUTION_TYPES, INSTITUTION_LEVELS,
   MEDIUMS, GENDERS, LOCATION_TYPES, BOARD_AFFILIATIONS, BD_DIVISIONS,
@@ -18,7 +20,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { SelectField } from '@/components/common/SelectField'
 import {
   ArrowLeft, Loader2, Users, GraduationCap, DollarSign,
-  Bell, Edit2, AlertTriangle, CheckCircle2,
+  Bell, Edit2, AlertTriangle, CheckCircle2, Camera,
 } from 'lucide-react'
 
 export const Route = createFileRoute('/_authenticated/schools/$schoolId')({
@@ -98,8 +100,10 @@ function SchoolDetailPage() {
   const { schoolId } = Route.useParams()
   const [editing, setEditing] = useState(false)
   const [confirmDeactivate, setConfirmDeactivate] = useState(false)
+  const [logoUploading, setLogoUploading] = useState(false)
+  const logoInputRef = useRef<HTMLInputElement>(null)
 
-  const { data: school, isLoading } = useSchool(schoolId)
+  const { data: school, isLoading, refetch: refetchSchool } = useSchool(schoolId)
   const { data: stats } = useSchoolDashboard(schoolId)
   const { mutate: updateSchool, isPending: updating } = useUpdateSchool(schoolId)
   const { mutate: deactivateSchool, isPending: deactivating } = useDeactivateSchool()
@@ -151,6 +155,22 @@ function SchoolDetailPage() {
     updateSchool(payload as any, { onSuccess: () => setEditing(false) })
   }
 
+  const onLogoChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setLogoUploading(true)
+    try {
+      await schoolsApi.uploadLogo(schoolId, file)
+      toast.success('School logo updated')
+      refetchSchool()
+    } catch (err: any) {
+      toast.error(err.response?.data?.message ?? 'Failed to upload logo')
+    } finally {
+      setLogoUploading(false)
+      if (logoInputRef.current) logoInputRef.current.value = ''
+    }
+  }
+
   if (isLoading) {
     return (
       <div className="flex items-center gap-2 text-sm text-muted-foreground">
@@ -178,6 +198,23 @@ function SchoolDetailPage() {
               <ArrowLeft className="h-4 w-4" />
             </Button>
           </Link>
+          {/* Logo */}
+          <div className="relative group shrink-0">
+            <div className="h-14 w-14 rounded-lg border bg-muted flex items-center justify-center overflow-hidden">
+              {school.logoUrl
+                ? <img src={school.logoUrl} alt="Logo" className="h-full w-full object-cover" />
+                : <Camera className="h-6 w-6 text-muted-foreground/50" />}
+            </div>
+            <button
+              type="button"
+              disabled={logoUploading}
+              onClick={() => logoInputRef.current?.click()}
+              className="absolute inset-0 rounded-lg bg-black/40 text-white text-[10px] font-medium opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center"
+            >
+              {logoUploading ? <Loader2 className="h-4 w-4 animate-spin" /> : 'Change'}
+            </button>
+            <input ref={logoInputRef} type="file" accept="image/jpeg,image/png,image/webp" className="hidden" onChange={onLogoChange} />
+          </div>
           <div>
             <h1 className="text-2xl font-bold tracking-tight">{school.name}</h1>
             {school.nameBn && (

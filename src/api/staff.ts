@@ -61,11 +61,25 @@ export const serviceBookApi = {
   list: (schoolId: string, staffId: string, params?: { page?: number; limit?: number }) =>
     apiClient.get<ServiceBookListResponse>(`/schools/${schoolId}/staff/${staffId}/service-book`, { params }),
 
-  create: (schoolId: string, staffId: string, payload: CreateServiceBookEntryPayload) =>
-    apiClient.post<ApiResponse<ServiceBookEntry>>(`/schools/${schoolId}/staff/${staffId}/service-book`, payload),
+  create: (schoolId: string, staffId: string, payload: CreateServiceBookEntryPayload, attachmentFile?: File) => {
+    if (attachmentFile) {
+      const fd = new FormData()
+      Object.entries(payload).forEach(([k, v]) => { if (v !== undefined && v !== null) fd.append(k, String(v)) })
+      fd.append('attachment', attachmentFile)
+      return apiClient.post<ApiResponse<ServiceBookEntry>>(`/schools/${schoolId}/staff/${staffId}/service-book`, fd)
+    }
+    return apiClient.post<ApiResponse<ServiceBookEntry>>(`/schools/${schoolId}/staff/${staffId}/service-book`, payload)
+  },
 
-  update: (schoolId: string, staffId: string, id: string, payload: Partial<CreateServiceBookEntryPayload>) =>
-    apiClient.patch<ApiResponse<ServiceBookEntry>>(`/schools/${schoolId}/staff/${staffId}/service-book/${id}`, payload),
+  update: (schoolId: string, staffId: string, id: string, payload: Partial<CreateServiceBookEntryPayload>, attachmentFile?: File) => {
+    if (attachmentFile) {
+      const fd = new FormData()
+      Object.entries(payload).forEach(([k, v]) => { if (v !== undefined && v !== null) fd.append(k, String(v)) })
+      fd.append('attachment', attachmentFile)
+      return apiClient.patch<ApiResponse<ServiceBookEntry>>(`/schools/${schoolId}/staff/${staffId}/service-book/${id}`, fd)
+    }
+    return apiClient.patch<ApiResponse<ServiceBookEntry>>(`/schools/${schoolId}/staff/${staffId}/service-book/${id}`, payload)
+  },
 
   delete: (schoolId: string, staffId: string, id: string) =>
     apiClient.delete<ApiResponse>(`/schools/${schoolId}/staff/${staffId}/service-book/${id}`),
